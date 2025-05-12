@@ -5,7 +5,7 @@ import ubu.adrian.taller.model.UserRol;
 /**
  * Clase de transferencia de datos de objetos User
  */
-public class UserDTO {
+public class UserRegisterDTO {
 	// Atributos (coinciden con User)
 	private Long id;
     private String username;
@@ -15,7 +15,7 @@ public class UserDTO {
     /**
      * Constructor sin parámetros
      */
-    public UserDTO() {}
+    public UserRegisterDTO() {}
 
     /**
      * Constructor con parámetros
@@ -25,7 +25,7 @@ public class UserDTO {
      * @param password Contraseña del usuario
      * @param rol Rol de usuario
      */
-    public UserDTO(Long id, String username, String password, UserRol rol) {
+    public UserRegisterDTO(Long id, String username, String password, UserRol rol) {
         this.id = id;
         this.username = username;
         this.password = password;

@@ -44,7 +44,7 @@ public class WebSecurityConfig {
         http
         	.authorizeHttpRequests((requests) -> requests
         		// Paginas a las que se puede acceder sin login
-    			.requestMatchers("/", "/register", "/login/**", "/create-user", "/exception-menu", "/file/**", "/db/**", "/pokemon/**").permitAll()
+    			.requestMatchers("/img/**", "/css/**", "/js/**", "/", "/register", "/login/**", "/create-user").permitAll()
     			// Ruta de administración
     			.requestMatchers("/user-list/**", "/remove", "/update-user-data").hasRole("ADMIN")
     			// Restro de requests autenticadas por defecto

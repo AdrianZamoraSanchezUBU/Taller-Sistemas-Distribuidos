@@ -23,7 +23,7 @@ public class UserServicesImpl implements UserServices{
 	 * @return List<User> Lista de todos los usuario encontrados
 	 */
 	@Override
-    public List < User > getAllUsers() {
+    public List <User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -46,7 +46,7 @@ public class UserServicesImpl implements UserServices{
 	 */
 	@Override
 	public User getUserById(long id) {
-		Optional < User > optional = userRepository.findById(id);
+		Optional <User> optional = userRepository.findById(id);
 		
         User user = null;
         

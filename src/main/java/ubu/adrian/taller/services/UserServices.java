@@ -13,7 +13,7 @@ public interface UserServices {
 	 * 
 	 * @return List<User> lista de todos los usuario encontrados
 	 */
-    List < User > getAllUsers();
+    List <User> getAllUsers();
     
     /**
 	 * Guarda al usuario en la base de datos

@@ -1,9 +1,16 @@
 package ubu.adrian.taller.controller;
 
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import ubu.adrian.taller.model.Event;
+import ubu.adrian.taller.repository.EventRepository;
+
 import org.springframework.ui.Model;
 
 /**
@@ -13,7 +20,10 @@ import org.springframework.ui.Model;
  */
 @Controller
 public class HomeController {
-
+	// Servicio de eventos
+	@Autowired
+	private EventRepository eventRepository;
+	
 	/**
 	 * Gestiona las solicitudes de la ruta /
 	 * 
@@ -26,6 +36,10 @@ public class HomeController {
         if (authentication != null && authentication.isAuthenticated()) {
             model.addAttribute("username", authentication.getName());
         }
+        
+        List<Event> eventList = eventRepository.findAll();
+        model.addAttribute("eventList", eventList);
+        
         return "home";
     }
 	
@@ -34,8 +48,8 @@ public class HomeController {
 	 * 
 	 * @return página de excepciones
 	 */
-	@GetMapping("/exception-menu")
+	@GetMapping("/event-search")
     public String menu() {
-        return "exceptionMenu";
+        return "eventSearch";
     }
 }

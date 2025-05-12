@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-	
+	// Permite serializar
 	private static final long serialVersionUID = 1L;
 
 	// ID (único)

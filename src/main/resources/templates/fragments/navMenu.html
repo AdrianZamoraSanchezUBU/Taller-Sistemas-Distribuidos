@@ -1,0 +1,51 @@
+<div th:fragment="navMenu">
+    <nav class="navbar navbar-expand-lg p-0" style="background-color: var(--main-color);">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav flex-row w-100">
+                    <li class="nav-item">
+                        <a class="nav-link text-white border-end border-white py-3 px-4" 
+                           th:href="@{/}" 
+                           style="transition: background-color 0.3s ease;">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white border-end border-white py-3 px-4" 
+                           th:href="@{/events/search}" 
+                           style="transition: background-color 0.3s ease;">Buscar eventos</a>
+                    </li>
+
+                    <!-- Se muestran botones de "Mis eventos" distintos para participantes y para organizadores -->
+                    <li class="nav-item" sec:authorize="hasRole('ORGANIZADOR')">
+                        <a class="nav-link text-white border-end border-white py-3 px-4" 
+                           th:href="@{/events/manage-events}" 
+                           style="transition: background-color 0.3s ease;">Mis eventos</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('PARTICIPANTE')">
+                        <a class="nav-link text-white border-end border-white py-3 px-4" 
+                           th:href="@{/events/my-events}" 
+                           style="transition: background-color 0.3s ease;">Mis eventos</a>
+                    </li>
+
+                    <!-- Si el usuario está autenticado muestra su panel de usuario, sino el botón de login -->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link text-white border-end border-white py-3 px-4" 
+                           th:href="@{/user-info}" 
+                           style="transition: background-color 0.3s ease;">Mi usuario</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAnonymous()">
+                        <a class="nav-link text-white border-end border-white py-3 px-4" 
+                           th:href="@{/login}" 
+                           style="transition: background-color 0.3s ease;">Login</a>
+                    </li>
+
+                    <!-- Si el usuario es admin le da acceso al panel de admin -->
+                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link text-white border-end border-white py-3 px-4" 
+                           th:href="@{/user-list}" 
+                           style="transition: background-color 0.3s ease;">Panel de admin</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</div>

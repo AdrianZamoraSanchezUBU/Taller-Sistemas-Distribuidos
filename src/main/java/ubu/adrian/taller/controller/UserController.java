@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import ubu.adrian.taller.dto.UserDTO;
+import ubu.adrian.taller.dto.UserRegisterDTO;
 import ubu.adrian.taller.model.User;
 import ubu.adrian.taller.model.UserRol;
 import ubu.adrian.taller.services.UserServices;
@@ -92,7 +92,7 @@ public class UserController {
 	 * @return página de registro o user-list
      */
     @PostMapping("/create-user")
-    public String createUser(@ModelAttribute("user") UserDTO userDTO, BindingResult result, Authentication authentication) {
+    public String createUser(@ModelAttribute("user") UserRegisterDTO userDTO, BindingResult result, Authentication authentication) {
     	
     	// Obtener el usuario actualmente autenticado
         boolean isAdmin = false;

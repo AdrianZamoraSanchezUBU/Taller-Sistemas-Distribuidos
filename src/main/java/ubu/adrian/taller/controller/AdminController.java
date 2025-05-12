@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.ui.Model;
 
-import ubu.adrian.taller.dto.UserDTO;
+import ubu.adrian.taller.dto.UserRegisterDTO;
 import ubu.adrian.taller.dto.UserMapper;
 import ubu.adrian.taller.model.User;
 import ubu.adrian.taller.model.UserRol;
@@ -61,7 +61,7 @@ public class AdminController {
     @GetMapping("/user-list")
     public String showUserList(Model model) {
     	// Lista de usuarios
-    	List<UserDTO> userDTOs = userServices.getAllUsers()
+    	List<UserRegisterDTO> userDTOs = userServices.getAllUsers()
                 .stream()
                 .map(userMapper::toDTO)
                 .toList();
@@ -110,7 +110,7 @@ public class AdminController {
 	 * @return lista de usuarios
 	 */
     @PostMapping("/update-user")
-    public String updateUser(@ModelAttribute("user") UserDTO updatedUserDTO, Model model) {
+    public String updateUser(@ModelAttribute("user") UserRegisterDTO updatedUserDTO, Model model) {
         // Busca al usuario (el cual puede no estar)
     	Optional<User> optionalUser = userRepo.findById(updatedUserDTO.getId());
         
