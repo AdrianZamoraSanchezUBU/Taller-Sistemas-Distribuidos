@@ -3,6 +3,8 @@ package ubu.adrian.taller.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entidad que modela un evento
@@ -48,8 +50,21 @@ public class Event {
     /**
      * Imagen del evento
      */
-    @Column(name = "imagen", nullable = false)
+    @Column(nullable = false)
     private String imagen;
+    
+    /**
+     * Usuario propietario del evento
+     */
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User owner;
+    
+    /**
+     * Categorias del evento
+     */
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EventCategory> categories = new ArrayList<>();
 
     /**
      * Devuelve el ID del evento
@@ -186,5 +201,31 @@ public class Event {
             this.imagen = "default-event.png";
         }
     }
+    
+    /**
+     * Devuelve el usuario dueño del evento
+     * 
+     * @return owner Usuario del dueño del evento
+     */
+    public User getOwner() {
+        return owner;
+    }
+    
+    /**
+     * Establece el usuario dueño del evento
+     * 
+     * param owner Usuario dueño del evento
+     */
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 
+	public void setCategories(List<EventCategory> categories) {
+		this.categories = categories;
+		
+	}
+	
+	public List<EventCategory> getCategories() {
+		return categories;
+	}
 }

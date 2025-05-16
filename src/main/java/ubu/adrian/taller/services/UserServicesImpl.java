@@ -67,4 +67,14 @@ public class UserServicesImpl implements UserServices{
 	public void deleteUserById(long id) {
 		userRepository.deleteById(id);
 	}
+
+	/**
+	 * Devuelve un usuario especificado
+	 * 
+	 * @param username Nombre del usuario que se busca
+	 */
+	@Override
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
 }

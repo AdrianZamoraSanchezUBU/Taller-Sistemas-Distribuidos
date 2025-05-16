@@ -35,4 +35,11 @@ public interface UserServices {
 	 * @param id Identificador del usuario que se desea eliminar
 	 */
     void deleteUserById(long id);
+
+    /**
+	 * Devuelve un usuario especificado
+	 * 
+	 * @param username Nombre del usuario que se busca
+	 */
+	User findByUsername(String username);
 }

@@ -22,6 +22,7 @@ services:
       start_period: 30s
     networks:
       - app-network
+
   app:
     build: .
     restart: unless-stopped
@@ -32,6 +33,10 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_PROFILES_ACTIVE: docker
+      APP_UPLOAD_DIR: /app/uploads
+      SPRING_RESOURCES_STATIC_LOCATIONS: "classpath:/static/"
+    volumes:
+      - uploads_volume:/app/uploads
     depends_on:
       mysqldb:
         condition: service_healthy
@@ -40,6 +45,8 @@ services:
 
 volumes:
   mysql_data:
+  uploads_volume:
+    name: taller_uploads
 
 networks:
   app-network:

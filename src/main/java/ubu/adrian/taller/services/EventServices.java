@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ubu.adrian.taller.model.Event;
-import ubu.adrian.taller.model.User;
 import ubu.adrian.taller.repository.EventRepository;
 
 @Service
@@ -28,4 +27,13 @@ public class EventServices {
     public List <Event> obtenerTodosLosEventos() {
         return eventRepository.findAll();
     }
+    
+    /**
+	 * Guarda al evento en la base de datos
+	 * 
+	 * @param event Evento que se quiere guardar
+	 */
+    public void saveEvent(Event event) {
+    	eventRepository.save(event);
+    };
 }

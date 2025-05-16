@@ -1,0 +1,5 @@
+package ubu.adrian.taller.model;
+
+public enum Categories {
+	DEPORTE, CONFERENCIA, CIENCIA, EDUCACION, BAILE, MUSICA, PINTURA, TEATRO, CINE, ACTUACION, AJEDREZ, PESCA, OTRO
+}

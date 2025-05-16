@@ -6,8 +6,22 @@ import ubu.adrian.taller.repository.UserRepository;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 /**
  * Clase encargada de generar al usuario admin cuando se ejecura la app
@@ -15,13 +29,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Operación idempotente, una vez creado no hace nada, por más veces que se ejecute
  */
 @Component
-public class AdminInitializer implements CommandLineRunner {
+public class Initializer implements CommandLineRunner {
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Value("${app.upload.dir:/app/uploads}")
+    private String uploadDir;
 
     /**
      * Ejecuta una comprobación de la existencia de un usuario administrador
@@ -47,5 +64,19 @@ public class AdminInitializer implements CommandLineRunner {
             userRepository.save(admin);
             System.out.println("Usuario \"admin\" operativo");
         }
+    	
+    	// Copia la imagen por defecto de eventos si no existe 
+    	// (no lo conseguia hacer con docker y asi funciona...)
+        try {
+        	Path uploadPath = Paths.get(uploadDir + "/img/event/");
+            Files.createDirectories(uploadPath);
+
+            Path destination = uploadPath.resolve("default-event.png");
+            Path source = Paths.get("/app/assets/default-event.png");
+            Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            System.err.println("Error al copiar la imagen default-event.png: " + e.getMessage());
+        }
     }
+    
 }
