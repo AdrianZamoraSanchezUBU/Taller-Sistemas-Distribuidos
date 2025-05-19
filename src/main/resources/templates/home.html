@@ -20,12 +20,6 @@
 	        <div>
 	            <!-- Nav Menu -->
 	            <div th:replace="~{fragments/navMenu :: navMenu}"></div>
-	
-	            <!-- Logout -->
-	            <form style="margin-top: 10px;" class="d-flex justify-content-start" th:action="@{/logout}" method="POST">
-	                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-	                <div th:replace="~{fragments/mainButton :: boton('Cerrar sesión', 'btn-primary', 'background-color: #EC407A;')}"></div>
-	            </form>
 	        </div>
 	
 	        <!-- Lista de eventos -->
@@ -37,15 +31,15 @@
 	                    <div th:each="event : ${eventList}">
 	                        <div class="card">
 	                            <img th:src="@{'/img/event/' + ${event.imagen}}" 
-	                                th:alt="${event.titulo}" 
+	                                th:alt="${event.title}" 
 	                                class="card-img-top"
 	                                style="width: 100%; max-height: 200px; object-fit: contain;">
 	                            
 	                            <div class="card-body">
-	                                <h5 class="card-title" th:text="${event.titulo}">Event Title</h5>
-	                                <p class="card-text" th:text="${event.descripcion}">Event Description</p>
+	                                <h5 class="card-title" th:text="${event.title}">Event Title</h5>
+	                                <p class="card-text" th:text="${event.description}">Event Description</p>
 	                                <p class="card-text">
-	                                    <small class="text-muted" th:text="${event.fechaInicio}">Date</small>
+	                                    <small class="text-muted" th:text="${event.startDate}">Date</small>
 	                                </p>
 	                            </div>
 	                        </div>

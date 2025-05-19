@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ubu.adrian.taller.services.EventServices;
@@ -43,7 +44,7 @@ public class EventController {
 	// Servicio de usuarios
 	@Autowired
 	private UserServices userServices;
-
+	
     
 	/**
 	 * Constructor del controlador de usuarios
@@ -55,21 +56,60 @@ public class EventController {
     } 
     
     /**
-	 * Gestiona las solicitudes de la ruta /create-event
+	 * Gestiona las solicitudes de la ruta /event/search
 	 * 
 	 * @return página de creación de eventos
 	 */
-    @GetMapping("/event-list")
-    public String eventList() {
-        return "redirect:/";
+    @GetMapping("/event/search")
+    public String eventList(
+    		@RequestParam(required = false) List<Categories> categories,
+            @RequestParam(required = false) String capacity,
+            Model model,
+            Authentication authentication
+    ) {
+        List<Event> eventList;
+
+        // Lógica de filtrado
+        if (categories == null && (capacity == null || capacity.isEmpty())) {
+            eventList = eventServices.findAll();
+        } else {
+            // Filtrar según los parámetros
+        	eventList = eventServices.findByFilters(categories, capacity);
+        }
+
+        model.addAttribute("eventList", eventList);
+        model.addAttribute("categories", Categories.values());
+
+        // Para mantener el estado del filtro en la vista
+        model.addAttribute("selectedCategories", categories);
+        model.addAttribute("selectedCapacity", capacity);
+
+        return "eventList";
+    }
+    
+    /**
+	 * Gestiona las solicitudes de la ruta /event/filter
+	 * 
+	 * @return página de creación de eventos
+	 */
+    @GetMapping("/event/filter")
+    public String eventFilter(Model model, Authentication authentication) {
+        // Obtiene y añade la lista de eventos al modelo
+        List<Event> eventList = eventServices.findAll();
+        model.addAttribute("eventList", eventList);
+        
+        // Se añaden las categorías disponibles
+        model.addAttribute("categories", Categories.values());
+        
+        return "eventList";
     }
 
 	/**
-	 * Gestiona las solicitudes de la ruta /create-event
+	 * Gestiona las solicitudes de la ruta /event/create
 	 * 
 	 * @return página de creación de eventos
 	 */
-    @GetMapping("/create-event")
+    @GetMapping("/event/create")
     public String createEvent(Model model) {
         model.addAttribute("categories", Categories.values());
         return "createEvent";
@@ -97,11 +137,11 @@ public class EventController {
     	
         // Crear nueva entidad Event
         Event event = new Event();
-        event.setTitulo(eventForm.getTitulo());
-        event.setDescripcion(eventForm.getDescripcion());
-        event.setFechaInicio(eventForm.getFechaInicio());
-        event.setFechaFin(eventForm.getFechaFin());
-        event.setLugar(eventForm.getLugar());
+        event.setTitle(eventForm.getTitle());
+        event.setDescription(eventForm.getDescription());
+        event.setStartDate(eventForm.getStartDate());
+        event.setEndDate(eventForm.getEndDate());
+        event.setUbication(eventForm.getUbication());
         event.setOwner(owner);
         
         // Manejar la imagen
@@ -143,6 +183,6 @@ public class EventController {
         // Guardar el evento (se guardan en cascada las categorías)
         eventServices.saveEvent(event);
         
-        return "redirect:/event-list";
+        return "redirect:/event/search";
     }
 }

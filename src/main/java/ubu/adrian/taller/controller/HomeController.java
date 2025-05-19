@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import ubu.adrian.taller.model.Event;
-import ubu.adrian.taller.repository.EventRepository;
+import ubu.adrian.taller.services.EventServices;
 
 import org.springframework.ui.Model;
 
@@ -22,7 +22,7 @@ import org.springframework.ui.Model;
 public class HomeController {
 	// Servicio de eventos
 	@Autowired
-	private EventRepository eventRepository;
+	private EventServices eventServices;
 	
 	/**
 	 * Gestiona las solicitudes de la ruta /
@@ -37,19 +37,9 @@ public class HomeController {
             model.addAttribute("username", authentication.getName());
         }
         
-        List<Event> eventList = eventRepository.findAll();
+        List<Event> eventList = eventServices.findAll();
         model.addAttribute("eventList", eventList);
         
         return "home";
-    }
-	
-	/**
-	 * Gestiona las solicitudes de la ruta /exception-menu
-	 * 
-	 * @return página de excepciones
-	 */
-	@GetMapping("/event-search")
-    public String menu() {
-        return "eventSearch";
     }
 }

@@ -96,10 +96,6 @@ public class Event {
     private List<User> participants = new ArrayList<>();
     
     /**
-     * Usuarios participantes del evento
-     */
-
-    /**
      * Devuelve el ID del evento
      * 
      * @return ID del evento
@@ -149,7 +145,7 @@ public class Event {
      * 
      * @param description Descripción del evento
      */
-    public void setDescritcion(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -203,7 +199,7 @@ public class Event {
      * 
      * @param ubication Lugar del evento
      */
-    public void setLugar(String ubication) {
+    public void setUbication(String ubication) {
         this.ubication = ubication;
     }
     
