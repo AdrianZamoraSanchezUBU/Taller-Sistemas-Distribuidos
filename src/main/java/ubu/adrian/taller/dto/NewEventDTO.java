@@ -16,6 +16,7 @@ public class NewEventDTO {
     private String ubication;
     private User owner;
     private List<String> categories = new ArrayList<>();
+    private int maxCapacity;
     
 	public String getTitle() {
 		return title;
@@ -64,5 +65,11 @@ public class NewEventDTO {
 	}
 	public void setCategories(List<String> categories) { 
 		this.categories = categories; 
+	}
+	public int getMaxCapacity() {
+		return maxCapacity;
+	}
+	public void setMaxCapacity(int maxCapacity) {
+		this.maxCapacity = maxCapacity;
 	}
 }

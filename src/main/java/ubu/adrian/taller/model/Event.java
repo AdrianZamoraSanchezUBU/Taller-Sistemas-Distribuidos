@@ -326,16 +326,16 @@ public class Event {
      * 
      * @param owner Usuario dueño del evento
      */
-	public void setActividades(List<Activity> activities) {
+	public void setActivities(List<Activity> activities) {
 	    this.activities = activities;
 	}
 	
 	/**
      * Devuelve las actividades del evento
      * 
-     * @retun lita de actividades asociadas al evento
+     * @return lita de actividades asociadas al evento
      */
-	public List<Activity> getActividades() {
+	public List<Activity> getActivities() {
 	    return activities;
 	}
 
@@ -364,7 +364,7 @@ public class Event {
 	 * 
 	 * @return Lista de participantes del evento
 	 */
-	public List<User> getParticipantes() {
+	public List<User> getParticipants() {
 	    return participants;
 	}
 
@@ -373,7 +373,7 @@ public class Event {
 	 * 
 	 * @param participants
 	 */
-	public void setParticipantes(List<User> participants) {
+	public void setParticipants(List<User> participants) {
 	    this.participants = participants;
 	}
 	

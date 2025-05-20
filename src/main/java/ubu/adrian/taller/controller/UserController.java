@@ -113,13 +113,18 @@ public class UserController {
             return "register";
         }
     	
-        // Si el usuario no es ADMIN, forzar el rol USER
-        UserRol rolFinal = isAdmin ? userDTO.getRol() : UserRol.PARTICIPANTE;
+        // Rol que se establece en el usuario
+        UserRol finalRol = userDTO.getRol();
+        
+        // Si el usuario no es ADMIN evita que se cree un administrador
+        if(userDTO.getRol() == UserRol.ADMIN && !isAdmin) {
+        	finalRol = UserRol.PARTICIPANTE;
+        }
         
         // Se genera el usuario desde el DTO
     	User user = new User();
     	user.setUsername(userDTO.getUsername());
-        user.setRol(rolFinal);
+        user.setRol(finalRol);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));  
         
     	// Se guarda al usuario en la db

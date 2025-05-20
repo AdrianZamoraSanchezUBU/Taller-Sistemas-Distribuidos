@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import ubu.adrian.taller.model.Categories;
 import ubu.adrian.taller.model.Event;
+import ubu.adrian.taller.model.User;
 import ubu.adrian.taller.repository.EventRepository;
 
 /**
@@ -22,6 +23,16 @@ public class EventServices {
     public EventServices(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
+    
+    /**
+     * Devuelve el evento dado su ID
+     * 
+     * @param id ID del evento
+     * @return Evento asociado al ID
+     */
+    public Event findById(long id) {
+    	return eventRepository.findById(id);
+    };
     
     /**
 	 * Devuelve una lista de todos los eventos
@@ -67,4 +78,41 @@ public class EventServices {
 
 	    return eventRepository.findAll();
 	};
+	
+	/**
+	 * Inscribe un usuario al evento
+	 */
+	public void addParticipantToEvent(Event event, User user) {
+	    event.getParticipants().add(user);
+	    eventRepository.save(event);
+	}
+	
+	/**
+	 * Elimina el evento dado su ID
+	 * 
+	 * @param id ID del evento que se desea borrar
+	 */
+	public void deleteById(long id) {
+	    eventRepository.deleteById(id);
+	}
+	
+	/**
+	 * Devuelve los eventos que ha creado un usuario
+	 * 
+	 * @param user Usuario que ha creado los eventos
+	 * @return Eventos creados por dicho usuario
+	 */
+	public List<Event> findByOwner(User owner) {
+	    return eventRepository.findByOwner(owner);
+	}
+	
+	/**
+	 * Busca los eventos comunes a un participante
+	 * 
+	 * @param user Participante cuyos eventos se quiere encontrar
+	 * @return Lista de eventos en los que participa el usuario
+	 */
+	public List<Event> findEventsByParticipant(User user) {
+	    return eventRepository.findByParticipantsContaining(user);
+	}
 }

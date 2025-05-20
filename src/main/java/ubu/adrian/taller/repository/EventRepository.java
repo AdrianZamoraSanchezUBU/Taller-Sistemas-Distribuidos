@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import ubu.adrian.taller.model.Categories;
 import ubu.adrian.taller.model.Event;
+import ubu.adrian.taller.model.User;
 
 /**
  * Repositorio de la entidad User
@@ -23,6 +24,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @return Event encontrado o null
      */
     public Event findById(long eventID);
+    
+    List<Event> findByOwner(User owner);
+
+    List<Event> findByParticipantsContaining(User participants);
 
     @Query("SELECT DISTINCT e FROM Event e " +
     	       "JOIN e.categories c " +
