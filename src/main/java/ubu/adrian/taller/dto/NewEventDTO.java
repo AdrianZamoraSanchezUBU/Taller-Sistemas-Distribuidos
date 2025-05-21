@@ -14,7 +14,6 @@ public class NewEventDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private String ubication;
-    private User owner;
     private List<String> categories = new ArrayList<>();
     private int maxCapacity;
     
@@ -53,12 +52,6 @@ public class NewEventDTO {
 	}
 	public void setUbication(String ubication) {
 		this.ubication = ubication;
-	}
-	public User getOwner() {
-		return owner;
-	}
-	public void setOwner(User owner) {
-		this.owner = owner;
 	}
 	public List<String> getCategories() {
 		return categories;

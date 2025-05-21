@@ -107,14 +107,17 @@ public class EventController {
      */
     @PostMapping("/event/join/{id}")
     public String joinEvent(@PathVariable Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
-        if (authentication == null || !authentication.isAuthenticated()) {
+        // Se comprueba que el usuario está autenticado
+    	if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login";
         }
 
+    	// Se obtienen los datos del usuario y evento
         String username = authentication.getName();
         User user = userServices.findByUsername(username);
         Event event = eventServices.findById(id);
 
+        // Comprueba si el usuario puede apuntarse al evento (no debe pertenecer previamente)
         if (event.getParticipants().contains(user)) {
             redirectAttributes.addFlashAttribute("message", "Ya estás inscrito en este evento.");
         } else {
@@ -122,6 +125,33 @@ public class EventController {
         }
 
         return "redirect:/event/info/" + id;
+    }
+    
+    /**
+     * Añade un participante al evento
+     * 
+     * @return Página de login en caso de necesitar login o información del evento
+     */
+    @PostMapping("/event/leave/{id}")
+    public String leaveEvent(@PathVariable Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+        // Se comprueba que el usuario está autenticado
+    	if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+    	// Se obtienen los datos del usuario y evento
+        String username = authentication.getName();
+        User user = userServices.findByUsername(username);
+        Event event = eventServices.findById(id);
+
+        // Comprueba si el usuario puede salir del evento (debe pertenecer previamente)
+        if (!event.getParticipants().contains(user)) {
+            redirectAttributes.addFlashAttribute("message", "No estás inscrito en este evento.");
+        } else {
+            eventServices.removeParticipantToEvent(event, user);
+        }
+
+        return "redirect:/event/my-events";
     }
     
     /**
@@ -134,6 +164,7 @@ public class EventController {
     public String eventInfo(@PathVariable long id, Model model, Authentication authentication){
     	
         Event event = eventServices.findById(id);
+        boolean owner = false;
         
         // Si está logueado se obtiene su info, sino queda null
         User user = null;
@@ -141,6 +172,13 @@ public class EventController {
             user = userServices.findByUsername(authentication.getName());
         }
 
+        // Comprueba si es el dueño para mostrar datos de organizador del evento
+        if (event.getOwner().equals(user) && user.getRol() == UserRol.ORGANIZADOR) {
+            owner = true;
+        }
+
+        // Se añade información al modelo
+        model.addAttribute("owner", owner);
         model.addAttribute("event", event);
         model.addAttribute("user", user);
     	
@@ -277,4 +315,108 @@ public class EventController {
         
         return "redirect:/event/search";
     }
+    
+    @GetMapping("/event/edit/{id}")
+    public String updateEvent(@PathVariable long id, Model model, Authentication authentication) {
+    	Event event = eventServices.findById(id);
+
+        // El usuario debe ser autenticado como owner del evento
+        String username = authentication.getName();
+        if (!event.getOwner().getUsername().equals(username)) {
+            return "redirect:/login";
+        }
+
+        // Crear DTO con los valores del evento
+        NewEventDTO dto = new NewEventDTO();
+        model.addAttribute("id", id);
+        dto.setTitle(event.getTitle());
+        dto.setDescription(event.getDescription());
+        model.addAttribute("imagen", event.getImagen());
+        dto.setStartDate(event.getStartDate());
+        dto.setEndDate(event.getEndDate());
+        dto.setMaxCapacity(event.getMaxCapacity());
+        dto.setUbication(event.getUbication());
+
+        // Convertir las categorías del evento a lista de Strings
+        List<String> categories = event.getCategories().stream()
+            .map(ec -> ec.getCategory().name())
+            .collect(Collectors.toList());
+        dto.setCategories(categories);
+
+        model.addAttribute("eventDTO", dto);
+        return "updateEvent";
+    }
+    
+	@PostMapping("/update-event/{id}")
+	public String updateEvent(@PathVariable long id, 
+			@ModelAttribute NewEventDTO updatedEvent, 
+			Authentication authentication) throws IOException {
+		
+	    Event existing = eventServices.findById(id);
+	    
+	    // Comprueba que el dueño del evento es el que lo está editando
+        User user = null;
+        if (authentication != null && authentication.isAuthenticated()) {
+            user = userServices.findByUsername(authentication.getName());
+        }
+
+        // Comprueba si es el dueño para mostrar datos de organizador del evento
+        if (!existing.getOwner().equals(user) && user.getRol() != UserRol.ORGANIZADOR) {
+            return "redirect:/login";
+        }
+	    
+	    // Manejar la imagen
+        if (updatedEvent.getImagen() == null) {
+            existing.setImagen(existing.getImagen()); // Se mantiene la que había
+        } else {
+        	String nombreArchivo;
+        	
+        	// Imagen por defecto
+        	if(updatedEvent.getImagen().isEmpty()) {
+        		nombreArchivo = "default-event.png";
+        	}
+        	
+        	nombreArchivo = UUID.randomUUID() + "_" + updatedEvent.getImagen().getOriginalFilename();
+             
+            // Ruta dentro del contenedor
+            Path uploadPath = Paths.get(uploadDir + "/img/event/");
+            Files.createDirectories(uploadPath);
+             
+            Path filePath = uploadPath.resolve(nombreArchivo);
+            Files.copy(updatedEvent.getImagen().getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        
+            existing.setImagen(nombreArchivo);
+        }
+	    
+	    // Datos actualizados
+	    existing.setTitle(updatedEvent.getTitle());
+	    existing.setDescription(updatedEvent.getDescription());
+	    existing.setStartDate(updatedEvent.getStartDate());
+	    existing.setEndDate(updatedEvent.getEndDate());
+	    
+	    // Convertir Strings a Categories
+        List<Categories> categoryEnums = new ArrayList<>();
+        if(updatedEvent.getCategories() != null) {
+            for(String catStr : updatedEvent.getCategories()) {
+                try {
+                    Categories catEnum = Categories.valueOf(catStr);
+                    categoryEnums.add(catEnum);
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Categoria no valida: " + catStr);
+                }
+            }
+        }
+        
+        // Crear EventCategory para cada enum
+        List<EventCategory> eventCategories = categoryEnums.stream()
+            .map(catEnum -> new EventCategory(catEnum, existing))
+            .collect(Collectors.toList());
+        
+        existing.getCategories().clear(); // Borra las que había antes
+        existing.getCategories().addAll(eventCategories);
+        
+        // Actualiza los datos del evento
+	    eventServices.saveEvent(existing);
+	    return "redirect:/event/info/" + id;
+	}
 }

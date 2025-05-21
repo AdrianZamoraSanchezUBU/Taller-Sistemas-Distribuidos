@@ -84,6 +84,16 @@ public class EventServices {
 	 */
 	public void addParticipantToEvent(Event event, User user) {
 	    event.getParticipants().add(user);
+	    event.increaseNumParticipant();
+	    eventRepository.save(event);
+	}
+	
+	/**
+	 * Da de baja un usuario al evento
+	 */
+	public void removeParticipantToEvent(Event event, User user) {
+	    event.getParticipants().remove(user);
+	    event.decreaseNumParticipant();
 	    eventRepository.save(event);
 	}
 	
