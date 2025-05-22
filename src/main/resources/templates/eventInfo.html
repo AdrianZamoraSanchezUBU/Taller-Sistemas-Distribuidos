@@ -6,6 +6,21 @@
 		<link rel="stylesheet" href="/css/styles.css">
 	    <!-- Bootstrap CDN -->
 	    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		
+		<!-- Leaflet CSS y JS -->
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+		<!-- Leaflet Control Geocoder CSS y JS -->
+		<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+		<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+	
+	    <style>
+	        #map {
+	            height: 300px;
+	            margin-bottom: 1rem;
+	        }
+		</style>
 	</head>
 	<body>
 		<!-- Nav Menu -->
@@ -14,7 +29,7 @@
 		<div class="container mt-5">
 			<!-- Información general -->
 			<div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
-			  <!-- Imagen grande a la izquierda -->
+			  <!-- Imagen del evento a la izquierda -->
 			  <div style="flex: 1;">
 			    <img th:src="@{'/img/event/' + ${event.imagen}}" 
 			         alt="Imagen del evento" 
@@ -25,7 +40,6 @@
 			  <div style="flex: 1;">
 			    <h1 th:text="${event.title}">Título del evento</h1>
 			    <p><strong>Fecha:</strong><span th:text="${event.startDate}"></span> a <span th:text="${event.endDate}"></span></p>
-			    <p><strong>Lugar:</strong> <span th:text="${event.ubication}"></span></p>
 			    <p><strong>Descripción:</strong></p>
 			    <p th:text="${event.description}">Descripción aquí</p>
 				<p><strong>Aforo</strong>
@@ -33,6 +47,12 @@
 					/
 					<span th:text="${event.maxCapacity}"></span></p>
 
+				<!-- Ubicación en texto -->
+				<p><strong>Lugar:</strong> <span th:text="${event.ubication}" id="ubication-text">Burgos, Castilla y León, España</span></p>
+
+				<!-- Ubicación con pin en el mapa -->
+				<div id="map"></div>
+				
 				<div class="my-3">
 					<p><strong>Categorías:</strong> 
 				    <span class="badge bg-primary" th:each="cat : ${event.categories}" th:text="${cat.category.name}">Sin categoría</span>
@@ -84,5 +104,49 @@
 		        <a th:href="@{/activity/manage/{id}(id=${event.id})}" class="btn btn-secondary mt-3">Gestionar Actividades</a>
 		    </div>
 		</div>
+		
+		<script>
+			// Cuando carga el DOM carga la ubicación en el mapa
+			document.addEventListener("DOMContentLoaded", function () {
+				// Se extrae la ubicación del texto
+			    const address = document.getElementById("ubication-text").textContent.trim();
+			    const map = L.map('map').setView([40, -3], 6);
+
+			    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			        attribution: '© OpenStreetMap contributors'
+			    }).addTo(map);
+
+			    // API de Nominatim para decodificar ubicación
+			    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&countrycodes=es&limit=1`)
+			        .then(response => response.json())
+			        .then(data => {
+			            if (data && data.length > 0) {
+			                const result = data[0];
+			                const lat = parseFloat(result.lat);
+			                const lon = parseFloat(result.lon);
+			                map.setView([lat, lon], 13);
+							
+							// Añade el pin en el mapa
+			                L.marker([lat, lon])
+			                    .addTo(map)
+			                    .bindPopup(address) 
+			                    .openPopup();
+			            } else {
+			                throw new Error('Ubicación no encontrada');
+			            }
+			        }) // Gestión de errores (algunas direcciones no salen en el mapa, en algunos paises va muy mal...)
+			        .catch(error => {
+			            console.error("Error en geocodificación:", error);
+						// En caso de no encontrar la ubicación se muestra este mensaje de error dentro del mapa
+			            document.getElementById('map').innerHTML = `
+			                <div class="alert alert-warning">
+			                    No se pudo cargar la ubicación: ${address}
+			                </div>
+			            `;
+			        });
+
+			    setTimeout(() => map.invalidateSize(), 100);
+			});
+		</script>
 	</body>
 </html>
