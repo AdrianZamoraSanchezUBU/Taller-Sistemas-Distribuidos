@@ -94,6 +94,20 @@ public class EventController {
         // Autorización: solo el creador o un ADMIN puede borrar
         if (event.getOwner().equals(user) || user.getRol() == UserRol.ADMIN) {
             eventServices.deleteById(id);
+            
+            // Elimina la imagen del evento si no es la por defecto
+            if (event.getImagen() != null && !event.getImagen().equals("default-event.png")) {
+            	// Ruta dentro del contenedor
+                Path uploadPath = Paths.get(uploadDir + "/img/event/");
+            	Path imagePath = uploadPath.resolve(event.getImagen());
+            	
+                try {
+                    Files.deleteIfExists(imagePath);
+                } catch (IOException e) {
+                    System.out.println("No se pudo eliminar la imagen anterior: " + e.getMessage());
+                }
+            }
+            
             return "redirect:/";
         }
 
@@ -316,6 +330,14 @@ public class EventController {
         return "redirect:/event/search";
     }
     
+    /**
+     * Visualiza la información de un evento
+     * 
+     * @param id
+     * @param model
+     * @param authentication
+     * @return
+     */
     @GetMapping("/event/edit/{id}")
     public String updateEvent(@PathVariable long id, Model model, Authentication authentication) {
     	Event event = eventServices.findById(id);
@@ -347,6 +369,15 @@ public class EventController {
         return "updateEvent";
     }
     
+    /**
+     * Actualiza la información del evento
+     * 
+     * @param id ID del evento que se quiere actualizar
+     * @param updatedEvent Objeto que contiene los datos actualizados
+     * @param authentication Sistema de autentificación de spring boot 
+     * @return Página de información del evento actualizado
+     * @throws IOException En caso de problemas durante la gestión de la imagen
+     */
 	@PostMapping("/update-event/{id}")
 	public String updateEvent(@PathVariable long id, 
 			@ModelAttribute NewEventDTO updatedEvent, 
@@ -381,6 +412,16 @@ public class EventController {
             // Ruta dentro del contenedor
             Path uploadPath = Paths.get(uploadDir + "/img/event/");
             Files.createDirectories(uploadPath);
+            
+            // Elimina la imagen anterior si no es la por defecto
+            if (existing.getImagen() != null && !existing.getImagen().equals("default-event.png")) {
+                Path oldImagePath = uploadPath.resolve(existing.getImagen());
+                try {
+                    Files.deleteIfExists(oldImagePath);
+                } catch (IOException e) {
+                    System.out.println("No se pudo eliminar la imagen anterior: " + e.getMessage());
+                }
+            }
              
             Path filePath = uploadPath.resolve(nombreArchivo);
             Files.copy(updatedEvent.getImagen().getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
@@ -393,6 +434,7 @@ public class EventController {
 	    existing.setDescription(updatedEvent.getDescription());
 	    existing.setStartDate(updatedEvent.getStartDate());
 	    existing.setEndDate(updatedEvent.getEndDate());
+	    existing.setMaxCapacity(updatedEvent.getMaxCapacity());
 	    
 	    // Convertir Strings a Categories
         List<Categories> categoryEnums = new ArrayList<>();
@@ -412,7 +454,8 @@ public class EventController {
             .map(catEnum -> new EventCategory(catEnum, existing))
             .collect(Collectors.toList());
         
-        existing.getCategories().clear(); // Borra las que había antes
+        // Borra las que había antes y añade las nuevas
+        existing.getCategories().clear(); 
         existing.getCategories().addAll(eventCategories);
         
         // Actualiza los datos del evento

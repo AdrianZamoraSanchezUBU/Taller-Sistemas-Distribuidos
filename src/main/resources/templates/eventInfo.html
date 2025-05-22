@@ -81,7 +81,7 @@
 		                <span th:text="${activity.description}">Descripción</span>
 		            </li>
 		        </ul>
-		        <a th:href="@{/event/{id}/activities/manage(id=${event.id})}" class="btn btn-secondary mt-3">Gestionar Actividades</a>
+		        <a th:href="@{/activity/manage/{id}(id=${event.id})}" class="btn btn-secondary mt-3">Gestionar Actividades</a>
 		    </div>
 		</div>
 	</body>

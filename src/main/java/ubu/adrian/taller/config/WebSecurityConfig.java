@@ -44,9 +44,11 @@ public class WebSecurityConfig {
         http
         	.authorizeHttpRequests((requests) -> requests
         		// Paginas a las que se puede acceder sin login
-    			.requestMatchers("/img/**", "/css/**", "/js/**", "/", "/register", "/login/**", "/create-user", "/event/search", "/event/info/**").permitAll()
+    			.requestMatchers("/img/**", "/css/**", "/js/**", "/", "/register", "/login/**", "/create-user", "/event/search", "/event/info/**", "/activity/info/**").permitAll()
+    			// Rutas de organizadores
+    			.requestMatchers("/event/create", "/event/edit/**", "/activity/**").hasRole("ORGANIZADOR")
     			// Ruta de administración
-    			.requestMatchers("/user-list/**", "/remove", "/update-user-data").hasRole("ADMIN")
+    			.requestMatchers("/user-list/**", "/remove", "/update-user-data", "/event/create", "/event/edit/**", "/activity/**").hasRole("ADMIN")
     			// Restro de requests autenticadas por defecto
                 .anyRequest().authenticated()
             )
@@ -56,11 +58,12 @@ public class WebSecurityConfig {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/", true) // Redirige al home al iniciar sesión
+                .failureUrl("/login")
                 .permitAll()
             )
             .logout((logout) -> logout.permitAll()
         		.logoutUrl("/logout")  // URL para activar el logout
-                .logoutSuccessUrl("/?logout")
+                .logoutSuccessUrl("/")
                 .invalidateHttpSession(true) // Invalida la sesión
                 .deleteCookies("JSESSIONID") // Borrar las cookies
                 .permitAll()

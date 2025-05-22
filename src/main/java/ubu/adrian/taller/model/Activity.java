@@ -1,6 +1,8 @@
 package ubu.adrian.taller.model;
 
 import jakarta.persistence.*;
+import java.time.LocalTime;
+
 
 /**
  * Entidad que modela una actividad
@@ -20,10 +22,10 @@ public class Activity {
     private String description;
 
     @Column(name = "start_time")
-    private String startTime;
+    private LocalTime startTime;
 
     @Column(name = "end_time")
-    private String endTime;
+    private LocalTime endTime;
 
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
@@ -53,19 +55,19 @@ public class Activity {
         this.description = description;
     }
 
-    public String getStarTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    public void setStarTime(String startTime) {
+    public void setStartTime(LocalTime startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
 
