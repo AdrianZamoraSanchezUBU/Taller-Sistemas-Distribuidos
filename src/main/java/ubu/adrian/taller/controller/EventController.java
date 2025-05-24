@@ -61,6 +61,9 @@ public class EventController {
     }
     
     /**
+     * Visualiza los eventos a los que está inscrito un usuario
+     * o los que pertenecen a un organizador según sea el rol de usuario
+     * 
      * 
      */
     @GetMapping("/event/my-events")
@@ -82,7 +85,7 @@ public class EventController {
     }
     
     /**
-     * Elimina un evento de este usuario
+     * Elimina un evento
      * 
      * @return Al home o a la lista de eventos
      */
@@ -120,10 +123,13 @@ public class EventController {
      * @return Página de login en caso de necesitar login o información del evento
      */
     @PostMapping("/event/join/{id}")
-    public String joinEvent(@PathVariable Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+    public String joinEvent(@PathVariable long id, 
+    		Authentication authentication, 
+    		RedirectAttributes redirectAttributes) {
+    	
         // Se comprueba que el usuario está autenticado
     	if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return "redirect:/login?error=Debes+iniciar+sesión+para+participar+en+un+evento";
         }
 
     	// Se obtienen los datos del usuario y evento
@@ -142,15 +148,42 @@ public class EventController {
     }
     
     /**
-     * Añade un participante al evento
+     * Desinscribe un participante del evento
      * 
-     * @return Página de login en caso de necesitar login o información del evento
+     * @return Página de eventos
      */
-    @PostMapping("/event/leave/{id}")
-    public String leaveEvent(@PathVariable Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+    @PostMapping("/event/{eventId}/remove-user/{userId}")
+    public String removeParticipant(@PathVariable long eventId,
+                                    @PathVariable long userId,
+                                    Authentication authentication,
+                                    RedirectAttributes redirectAttributes) {
+
+        User currentUser = userServices.findByUsername(authentication.getName());
+        Event event = eventServices.findById(eventId);
+
+        // Solo el dueño, que es organizador puede eliminar participantes
+        if (!event.getOwner().equals(currentUser) && currentUser.getRol() != UserRol.ORGANIZADOR) {
+            return "redirect:/login?error=Debes+iniciar+sesión+como+organizador+para+editar+el+evento";
+        }
+
+        // Toma el usuario que se quiere eliminar y lo borra del evento
+        User userToRemove = userServices.getUserById(userId);
+        eventServices.removeParticipantToEvent(event, userToRemove);
+
+        return "redirect:/event/info/" + eventId;
+    }
+    
+    /**
+     * Desinscribe un participante del evento 
+     * para uso de organizadores
+     * 
+     * @return Página de eventos
+     */
+    @PostMapping("/event/{id}/leave/")
+    public String leaveEvent(@PathVariable long id, Authentication authentication, RedirectAttributes redirectAttributes) {
         // Se comprueba que el usuario está autenticado
     	if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login";
+            return "redirect:/login?error=Debes+iniciar+sesión+para+dejar+un+evento";
         }
 
     	// Se obtienen los datos del usuario y evento
@@ -331,7 +364,7 @@ public class EventController {
     }
     
     /**
-     * Visualiza la información de un evento
+     * Edita los datos de un evento existente
      * 
      * @param id
      * @param model
@@ -345,7 +378,7 @@ public class EventController {
         // El usuario debe ser autenticado como owner del evento
         String username = authentication.getName();
         if (!event.getOwner().getUsername().equals(username)) {
-            return "redirect:/login";
+            return "redirect:/login?error=Debes+ser+el+propietario+del+evento+para+editarlo";
         }
 
         // Crear DTO con los valores del evento

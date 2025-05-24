@@ -89,10 +89,24 @@
 		        <a th:href="@{/event/edit/{id}(id=${event.id})}" class="btn btn-warning mb-3">Editar evento</a>
 		
 		        <h4>Participantes inscritos:</h4>
-		        <ul class="list-group mb-4">
-					<li class="list-group-item" th:if="${#lists.isEmpty(event.participants)}">No hay participantes actualmente</li>
-		            <li class="list-group-item" th:each="participant : ${event.participants}" th:text="${participant.username}">Usuario</li>
-		        </ul>
+				<ul class="list-group mb-4">
+					<!-- En caso de lista vacía -->
+				    <li class="list-group-item" th:if="${#lists.isEmpty(event.participants)}">
+				        No hay participantes actualmente
+				    </li>
+				    
+					<!-- Lista de usuarios con boton para eliminar -->
+				    <li class="list-group-item d-flex justify-content-between align-items-center"
+				        th:each="participant : ${event.participants}">
+				        
+				        <span th:text="${participant.username}">Nombre de usuario</span>
+				        
+				        <form th:action="@{'/event/' + ${event.id} + '/remove-user/' + ${participant.id}}" method="post"
+				              th:object="${event}">
+				            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+				        </form>
+				    </li>
+				</ul>
 		
 		        <h4>Actividades</h4>
 		        <ul class="list-group">

@@ -12,6 +12,11 @@
 		<div class="container-fluid mt-5 d-flex flex-column align-items-center">
 			<div class="col-md-3">
 			    <h1 class="text-center mb-3">Inicio de sesión</h1>
+				
+				<div th:if="${param.error}" th:text="${param.error}" class="alert alert-danger text-center">
+				    
+				</div>
+				
 			    <form action="#" th:action="@{/login}" method="POST" class="d-flex flex-column p-3 justify-content-center border shadow-lg">
 			        <input type="text" name="username" placeholder="Nombre" required="true" class="mb-3 p-2" />
 			        <input type="password" name="password" placeholder="Contraseña" required="true" class="mb-3 p-2" />

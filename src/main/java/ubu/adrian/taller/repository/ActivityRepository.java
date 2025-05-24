@@ -12,5 +12,4 @@ import ubu.adrian.taller.model.Event;
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
 	public Activity findById(long activityID);
-	
 }

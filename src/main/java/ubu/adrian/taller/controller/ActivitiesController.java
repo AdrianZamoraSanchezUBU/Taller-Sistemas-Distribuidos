@@ -1,6 +1,14 @@
 package ubu.adrian.taller.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -11,9 +19,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ubu.adrian.taller.dto.NewEventDTO;
+import ubu.adrian.taller.dto.NewActivityDTO;
 import ubu.adrian.taller.model.Activity;
+import ubu.adrian.taller.model.Categories;
 import ubu.adrian.taller.model.Event;
+import ubu.adrian.taller.model.EventCategory;
 import ubu.adrian.taller.model.User;
+import ubu.adrian.taller.model.UserRol;
 import ubu.adrian.taller.services.ActivityServices;
 import ubu.adrian.taller.services.EventServices;
 import ubu.adrian.taller.services.UserServices;
@@ -27,6 +40,7 @@ import ubu.adrian.taller.services.UserServicesImpl;
 @Controller
 public class ActivitiesController {
 	
+	// Servicios utilizados
 	EventServices eventServices;
 	ActivityServices activityServices;
 	UserServicesImpl userServices;
@@ -115,10 +129,11 @@ public class ActivitiesController {
 	 * @param model
 	 * @return
 	 */
-	@PostMapping("/activity/new-activity")
+	@PostMapping("/activity/save-activity")
 	public String saveActivity(@ModelAttribute Activity activity, 
 			@RequestParam("eventId") long eventId,
 			Authentication authentication) {
+		
 	    // Nos aseguramos de que el evento esté bien enlazado
 	    Event event = eventServices.findById(eventId);
 	    
@@ -132,6 +147,78 @@ public class ActivitiesController {
 
 	    activityServices.saveActivity(activity);
 
+	    return "redirect:/event/info/" + event.getId();
+	}
+	
+	/**
+     * Edita los datos de un evento existente
+     * 
+     * @param id
+     * @param model
+     * @param authentication
+     * @return
+     */
+    @GetMapping("/activity/edit/{id}")
+    public String editActivity(@PathVariable long id, Model model, Authentication authentication) {
+    	Activity activity = activityServices.findById(id);
+    	
+    	Event event = activity.getEvent();
+    	
+        // El usuario debe ser autenticado como owner del evento
+        String username = authentication.getName();
+        if (!event.getOwner().getUsername().equals(username)) {
+            return "redirect:/login";
+        }
+
+        // Crear DTO con los valores del evento
+        NewActivityDTO dto = new NewActivityDTO();
+        model.addAttribute("id", id);
+        dto.setName(activity.getName());
+        dto.setDescription(activity.getDescription());
+        dto.setStartTime(activity.getStartTime());
+        dto.setEndTime(activity.getEndTime());
+
+        // Convertir las categorías del evento a lista de Strings
+        
+        model.addAttribute("activityDTO", dto);
+        return "updateActivity";
+    }
+    
+    /**
+     * Actualiza la información de una actividad
+     * 
+     * @param id ID del evento que se quiere actualizar
+     * @param updatedActivity Objeto que contiene los datos actualizados
+     * @param authentication Sistema de autentificación de spring boot 
+     * @return Página de información del evento actualizado
+     */
+	@PostMapping("/update-activity/{id}")
+	public String updateActivity(@PathVariable long id, 
+			@ModelAttribute NewActivityDTO updatedActivity, 
+			Authentication authentication) {
+		
+	    Activity existing = activityServices.findById(id);
+	    
+	    Event event = existing.getEvent();
+	    // Comprueba que el dueño del evento es el que lo está editando
+        User user = null;
+        if (authentication != null && authentication.isAuthenticated()) {
+            user = userServices.findByUsername(authentication.getName());
+        }
+
+        // Comprueba si es el dueño para mostrar datos de organizador del evento
+        if (!event.getOwner().equals(user) && user.getRol() != UserRol.ORGANIZADOR) {
+            return "redirect:/login";
+        }
+	    
+	    // Datos actualizados
+	    existing.setName(updatedActivity.getName());
+	    existing.setDescription(updatedActivity.getDescription());
+	    existing.setStartTime(updatedActivity.getStartTime());
+	    existing.setEndTime(updatedActivity.getEndTime());
+	    
+        // Actualiza los datos de la actividad
+	    activityServices.saveActivity(existing);
 	    return "redirect:/event/info/" + event.getId();
 	}
 }

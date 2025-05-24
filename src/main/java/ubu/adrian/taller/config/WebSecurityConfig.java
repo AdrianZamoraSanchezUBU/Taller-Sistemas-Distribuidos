@@ -46,7 +46,7 @@ public class WebSecurityConfig {
         		// Paginas a las que se puede acceder sin login
     			.requestMatchers("/img/**", "/css/**", "/js/**", "/", "/register", "/login/**", "/create-user", "/event/search", "/event/info/**", "/activity/info/**").permitAll()
     			// Rutas de organizadores
-    			.requestMatchers("/event/create", "/event/edit/**", "/activity/**").hasRole("ORGANIZADOR")
+    			.requestMatchers("/event/create", "/event/edit/**", "/activity/**", "/event/*/remove-user/*").hasRole("ORGANIZADOR")
     			// Ruta de administración
     			.requestMatchers("/user-list/**", "/remove", "/update-user-data", "/event/create", "/event/edit/**", "/activity/**").hasRole("ADMIN")
     			// Restro de requests autenticadas por defecto
