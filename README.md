@@ -51,4 +51,6 @@ Para evitar tener que ejecutar varios comandos para lanzar cada contenedor, teng
 `.\build.bat`
 
 ### Conclusión
-Ha sido todo un reto crear una aplicación web "completa" con una funcionalidad que cubre lo relacionado a la gestión de usuarios, eventos y actividades. Ha sido un reto aprender todo lo necesario sobre seguridad, modelado de datos y uso de la API de leaflet para el uso de mapas en el navegador. Finalmente, cabe mencionar que se utilizan estilos sencillos, con margen de mejora pero que cumplen las expectativas dado el limite de tiempo
+Ha sido todo un reto crear una aplicación web "completa" con una funcionalidad que cubre lo relacionado a la gestión de usuarios, eventos y actividades. Ha sido un reto aprender todo lo necesario sobre seguridad, modelado de datos y uso de la API de leaflet para el uso de mapas en el navegador. Cabe mencionar que se utilizan estilos sencillos, con margen de mejora pero que cumplen las expectativas dado el limite de tiempo.
+
+Pese a las dificultades ha sido un trabajo muy formativo y enriquecedor, donde he aprendido de forma directa y práctica como diseñar, crear y poner en funcionamiento un sistema distribuido para un servidor web.
