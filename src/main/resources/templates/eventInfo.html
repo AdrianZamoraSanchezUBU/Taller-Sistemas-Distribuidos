@@ -29,17 +29,17 @@
 		<div class="container mt-5">
 			<!-- Información general -->
 			<div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
-			  <!-- Imagen del evento a la izquierda -->
-			  <div style="flex: 1;">
-			    <img th:src="@{'/img/event/' + ${event.imagen}}" 
-			         alt="Imagen del evento" 
-			         style="width: 100%; max-width: 500px; height: auto; border-radius: 1rem;">
-			  </div>
-
-			  <!-- Información a la derecha -->
-			  <div style="flex: 1;">
-			    <h1 th:text="${event.title}">Título del evento</h1>
-			    <p><strong>Fecha:</strong><span th:text="${event.startDate}"></span> a <span th:text="${event.endDate}"></span></p>
+				<!-- Imagen del evento a la izquierda -->
+			  	<div style="flex: 1;">
+			  		<img th:src="@{'/img/event/' + ${event.imagen}}" 
+			        	 alt="Imagen del evento" 
+			         	style="width: 100%; max-width: 500px; height: auto; border-radius: 1rem;">
+			  	</div>
+			
+		  	<!-- Información a la derecha -->
+			<div style="flex: 1;">
+				<h1 th:text="${event.title}">Título del evento</h1>
+				<p><strong>Fecha:</strong><span th:text="${event.startDate}"></span> a <span th:text="${event.endDate}"></span></p>
 			    <p><strong>Descripción:</strong></p>
 			    <p th:text="${event.description}">Descripción aquí</p>
 				<p><strong>Aforo</strong>
@@ -52,20 +52,23 @@
 
 				<!-- Ubicación con pin en el mapa -->
 				<div id="map"></div>
-				
-				<div class="my-3">
-					<p><strong>Categorías:</strong> 
-				    <span class="badge bg-primary" th:each="cat : ${event.categories}" th:text="${cat.category.name}">Sin categoría</span>
+					<div class="my-3">
+						<p><strong>Categorías:</strong> 
+				    	<span class="badge bg-primary" th:each="cat : ${event.categories}" th:text="${cat.category.name}">Sin categoría</span>
+					</div>
 				</div>
-			  </div>
 			</div>
 
 			 <!-- Para Participantes -->
-			<div sec:authorize="hasRole('PARTICIPANTE')">
-			  <h2>Actividades</h2>
-			  <ul>
-			    <li th:each="activity : ${event.activities}" th:text="${activity.name}">Nombre de actividad</li>
-			  </ul>
+			<div th:if="${!#lists.isEmpty(event.activities)}">
+				<h2>Actividades</h2>
+			  	<ul class="list-group">
+		            <li class="list-group-item" th:each="activity : ${event.activities}">
+						<span th:text="${activity.startTime}">Hora inicio</span>-<span th:text="${activity.endTime}">Hora fin</span>
+						<strong th:text="${activity.name}">Nombre</strong> 
+						Descripción: <span th:text="${activity.description}">Descripción</span>
+		            </li>
+		      	</ul>
 			</div>
 		   
 		    <div sec:authorize="hasRole('PARTICIPANTE')">
@@ -108,14 +111,22 @@
 				    </li>
 				</ul>
 		
+				<!-- Lista las actividades del evento -->
 		        <h4>Actividades</h4>
 		        <ul class="list-group">
+					<!-- En caso de lista vacía -->
+				    <li class="list-group-item" th:if="${#lists.isEmpty(event.activities)}">
+				        No hay actividades actualmente
+				    </li>
+									    
+					
 		            <li class="list-group-item" th:each="activity : ${event.activities}">
-		                <strong th:text="${activity.name}">Nombre</strong> - 
+						<span th:text="${activity.startTime}">Hora inicio</span>-<span th:text="${activity.endTime}">Hora fin</span>
+						<strong th:text="${activity.name}">Nombre</strong> - 
 		                <span th:text="${activity.description}">Descripción</span>
 		            </li>
 		        </ul>
-		        <a th:href="@{/activity/manage/{id}(id=${event.id})}" class="btn btn-secondary mt-3">Gestionar Actividades</a>
+		        <a th:href="@{/activity/manage/{id}(id=${event.id})}" class="btn btn-secondary mt-3">Gestionar actividades</a>
 		    </div>
 		</div>
 		
@@ -154,7 +165,7 @@
 						// En caso de no encontrar la ubicación se muestra este mensaje de error dentro del mapa
 			            document.getElementById('map').innerHTML = `
 			                <div class="alert alert-warning">
-			                    No se pudo cargar la ubicación: ${address}
+			                    No se pudo cargar la ubicación en el mapa: ${address}
 			                </div>
 			            `;
 			        });

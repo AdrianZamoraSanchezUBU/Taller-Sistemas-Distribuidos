@@ -27,14 +27,14 @@ public interface UserServices {
 	 * 
 	 * @param id Identificador del usuario que se busca
 	 */
-    User getUserById(long id);
+    User findById(long id);
     
     /**
 	 * Elimina al usuario especificado
 	 * 
 	 * @param id Identificador del usuario que se desea eliminar
 	 */
-    void deleteUserById(long id);
+    void deleteById(long id);
 
     /**
 	 * Devuelve un usuario especificado

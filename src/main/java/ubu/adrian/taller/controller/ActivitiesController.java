@@ -1,15 +1,9 @@
 package ubu.adrian.taller.controller;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,17 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ubu.adrian.taller.dto.NewEventDTO;
 import ubu.adrian.taller.dto.NewActivityDTO;
 import ubu.adrian.taller.model.Activity;
-import ubu.adrian.taller.model.Categories;
 import ubu.adrian.taller.model.Event;
-import ubu.adrian.taller.model.EventCategory;
 import ubu.adrian.taller.model.User;
 import ubu.adrian.taller.model.UserRol;
-import ubu.adrian.taller.services.ActivityServices;
-import ubu.adrian.taller.services.EventServices;
-import ubu.adrian.taller.services.UserServices;
+import ubu.adrian.taller.services.ActivityServicesImpl;
+import ubu.adrian.taller.services.EventServicesImpl;
 import ubu.adrian.taller.services.UserServicesImpl;
 
 /**
@@ -41,8 +31,13 @@ import ubu.adrian.taller.services.UserServicesImpl;
 public class ActivitiesController {
 	
 	// Servicios utilizados
-	EventServices eventServices;
-	ActivityServices activityServices;
+	@Autowired
+	EventServicesImpl eventServices;
+	
+	@Autowired
+	ActivityServicesImpl activityServices;
+	
+	@Autowired
 	UserServicesImpl userServices;
 	
 	/**
@@ -51,7 +46,7 @@ public class ActivitiesController {
 	 * @param eventServices servicio de eventos
 	 * @param activityServices servicio de actividades
 	 */
-    public ActivitiesController(EventServices eventServices, ActivityServices activityServices, UserServicesImpl userServices) {
+    public ActivitiesController(EventServicesImpl eventServices, ActivityServicesImpl activityServices, UserServicesImpl userServices) {
         this.eventServices = eventServices;
         this.activityServices = activityServices;
         this.userServices = userServices;

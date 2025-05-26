@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import ubu.adrian.taller.model.Event;
-import ubu.adrian.taller.services.EventServices;
+import ubu.adrian.taller.services.EventServicesImpl;
 
 import org.springframework.ui.Model;
 
@@ -22,7 +22,7 @@ import org.springframework.ui.Model;
 public class HomeController {
 	// Servicio de eventos
 	@Autowired
-	private EventServices eventServices;
+	private EventServicesImpl eventServices;
 	
 	/**
 	 * Gestiona las solicitudes de la ruta /

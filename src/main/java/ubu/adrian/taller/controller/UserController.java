@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ubu.adrian.taller.dto.UserRegisterDTO;
 import ubu.adrian.taller.model.User;
 import ubu.adrian.taller.model.UserRol;
-import ubu.adrian.taller.services.UserServices;
+import ubu.adrian.taller.services.UserServicesImpl;
 
 /**
  * Controlador de las páginas relacionadas con la gestión de usuarios
@@ -29,21 +29,12 @@ import ubu.adrian.taller.services.UserServices;
 public class UserController {
 	// Servicio de usuarios
 	@Autowired
-	private UserServices userServices;
+	private UserServicesImpl userServices;
 	
 	// Servicio de encriptación de contraseñas
 	@Autowired
     private PasswordEncoder passwordEncoder;
     
-	/**
-	 * Constructor del controlador de usuarios
-	 * 
-	 * @param userServices servicio de usuarios
-	 */
-    public UserController(UserServices userServices) {
-        this.userServices = userServices;
-    }
-
 	/**
 	 * Gestiona las solicitudes de la ruta /login
 	 * 

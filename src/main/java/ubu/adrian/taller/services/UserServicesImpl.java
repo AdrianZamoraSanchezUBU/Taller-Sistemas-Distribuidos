@@ -13,7 +13,7 @@ import ubu.adrian.taller.repository.UserRepository;
  * Implementación de la interfaz UserServices
  */
 @Service
-public class UserServicesImpl implements UserServices{
+public class UserServicesImpl implements UserServices {
 	@Autowired
 	private UserRepository userRepository;
 	
@@ -45,7 +45,7 @@ public class UserServicesImpl implements UserServices{
 	 * @return Usuario que se ha encontrado
 	 */
 	@Override
-	public User getUserById(long id) {
+	public User findById(long id) {
 		Optional <User> optional = userRepository.findById(id);
 		
         User user = null;
@@ -64,7 +64,7 @@ public class UserServicesImpl implements UserServices{
 	 * @param id Identificador del usuario que se desea eliminar
 	 */
 	@Override
-	public void deleteUserById(long id) {
+	public void deleteById(long id) {
 		userRepository.deleteById(id);
 	}
 

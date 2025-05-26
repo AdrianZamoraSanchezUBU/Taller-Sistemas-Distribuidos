@@ -19,6 +19,7 @@ import ubu.adrian.taller.model.User;
 import ubu.adrian.taller.model.UserRol;
 import ubu.adrian.taller.repository.UserRepository;
 import ubu.adrian.taller.services.UserServices;
+import ubu.adrian.taller.services.UserServicesImpl;
 
 /**
  * Controlador del panel de administración
@@ -29,29 +30,16 @@ import ubu.adrian.taller.services.UserServices;
 public class AdminController {
 	// Servicio de usuarios
 	@Autowired
-	private UserServices userServices;
+	private UserServicesImpl userServices;
 	
 	// Servicio de encriptación de contraseñas
 	@Autowired
     private PasswordEncoder passwordEncoder;
 	
-	// Referencia al repositorio de usuario
-	@Autowired
-    private UserRepository userRepo;
-	
 	// Mapper de UserDTO a User
 	@Autowired
 	private UserMapper userMapper;
 
-	/**
-	 * Constructor que establece el userServices
-	 * 
-	 * @param userServices servicio de usuarios
-	 */
-    public AdminController(UserServices userServices) {
-        this.userServices = userServices;
-    }
-    
     /**
 	 * Gestiona las solicitudes de la ruta /admin
 	 * 
@@ -81,7 +69,7 @@ public class AdminController {
     @PostMapping("/remove")
     public String removeUser(@RequestParam("id") Long id) {
     	// Elimina por id
-        userRepo.findById(id).ifPresent(user -> userRepo.deleteById(id));
+        userServices.deleteById(id);
         return "redirect:/user-list";
     }
     
@@ -94,7 +82,7 @@ public class AdminController {
 	 */
     @GetMapping("/update-user-data")
     public String updateUserData(@RequestParam Long id, Model model) {
-    	User user = userServices.getUserById(id);
+    	User user = userServices.findById(id);
     	
         model.addAttribute("user", user);
         model.addAttribute("rolList", UserRol.values());
@@ -112,13 +100,12 @@ public class AdminController {
     @PostMapping("/update-user")
     public String updateUser(@ModelAttribute("user") UserRegisterDTO updatedUserDTO, Model model) {
         // Busca al usuario (el cual puede no estar)
-    	Optional<User> optionalUser = userRepo.findById(updatedUserDTO.getId());
+    	User existingUser = userServices.findById(updatedUserDTO.getId());
         
     	// Comprueba si el usuario esta presente
-    	if (optionalUser.isPresent()) {
+    	if (existingUser != null) {
     		// Toma los datos del usuario
-            User existingUser = optionalUser.get();
-            existingUser.setUsername(updatedUserDTO.getUsername());
+    		existingUser.setUsername(updatedUserDTO.getUsername());
 
             // Encripta la nueva contraseña
             String passwordEncriptada = passwordEncoder.encode(updatedUserDTO.getPassword());
@@ -127,7 +114,7 @@ public class AdminController {
             existingUser.setRol(updatedUserDTO.getRol());
             
             // Lo vuelve a guardar (reescribe sus datos)
-            userRepo.save(existingUser);
+            userServices.saveUser(existingUser);
         } else {
         	// Devuelve mensaje de error
             model.addAttribute("error", "No se encontró un usuario con el ID especificado.");

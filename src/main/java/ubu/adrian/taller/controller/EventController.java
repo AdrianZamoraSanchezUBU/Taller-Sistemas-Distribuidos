@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import ubu.adrian.taller.services.EventServices;
-import ubu.adrian.taller.services.UserServices;
+import ubu.adrian.taller.services.EventServicesImpl;
+import ubu.adrian.taller.services.UserServicesImpl;
 import ubu.adrian.taller.dto.NewEventDTO;
 import ubu.adrian.taller.model.Categories;
 import ubu.adrian.taller.model.Event;
@@ -31,10 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-
 /**
  * Controlador de las páginas relacionadas con la gestión de usuarios
  * 
@@ -44,22 +40,12 @@ import java.util.Date;
 public class EventController {
 	// Servicio de eventos
 	@Autowired
-	private EventServices eventServices;
+	private EventServicesImpl eventServices;
 	
 	// Servicio de usuarios
 	@Autowired
-	private UserServices userServices;
+	private UserServicesImpl userServices;
 	
-    
-	/**
-	 * Constructor del controlador de eventos
-	 * 
-	 * @param eventServices servicio de eventos
-	 */
-    public EventController(EventServices eventServices) {
-        this.eventServices = eventServices;
-    }
-    
     /**
      * Visualiza los eventos a los que está inscrito un usuario
      * o los que pertenecen a un organizador según sea el rol de usuario
@@ -167,7 +153,7 @@ public class EventController {
         }
 
         // Toma el usuario que se quiere eliminar y lo borra del evento
-        User userToRemove = userServices.getUserById(userId);
+        User userToRemove = userServices.findById(userId);
         eventServices.removeParticipantToEvent(event, userToRemove);
 
         return "redirect:/event/info/" + eventId;
