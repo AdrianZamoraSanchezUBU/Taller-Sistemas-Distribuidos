@@ -1,5 +1,7 @@
 # P2-Sistemas-Distribuidos
-Taller de la asignatura de Sistemas Distribuidos. Consiste en una aplicación que modela un sistema de gestión de eventos, estos eventos y las actividades de los mismos pueden ser creados y gestionados por el organizador, también se pueden agregar monitores para las diferentes actividades del evento. Los participantes pueden apuntarse a estos y ver las actividades de los eventos, así como información sobre la ubicación, descripción, horarios, etc.     
+Taller de la asignatura de Sistemas Distribuidos. Consiste en una aplicación que modela un sistema de gestión de eventos, estos eventos y las actividades de los mismos pueden ser creados y gestionados por el organizador, también se pueden agregar monitores para las diferentes actividades del evento. Los participantes pueden apuntarse a estos y ver las actividades de los eventos, así como información sobre la ubicación, descripción, horarios, etc. 
+
+Se incluye un modo administrador con el que poder gestionar además los usuarios del sistema.
 
 ## Características técnicas
 ### Spring Boot
@@ -8,7 +10,7 @@ La aplicación consisten principalmente en un servidor web con Spring Boot, cuen
 - Soporta login securizado.
 - Aporta un sistema de gestión de usuarios.
 - Base de datos MySQL.
-- Uso de la API de Google Maps.
+- Uso de la API de Leaflet (alternativo a Google Maps).
 
 ### MySQL
 - Contiene una base de datos llamada "taller".
