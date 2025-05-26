@@ -19,11 +19,14 @@ La aplicación consisten principalmente en un servidor web con Spring Boot, cuen
     - Gestiona los roles y niveles de acceso del los usuarios
 - Tabla de eventos:
     - Contiene información como descripción, duración...
-    - Contiene referencias al usuario organizador
 - Tabla de actividades:
-    - Contiene la información de la actividad
-    - Hace referencia al monitor que imparte la actividad
-    - Cotiene una referencia al taller donde se imparte
+    - Contiene la información de la actividad: nombre, descripción, duración...
+- Tabla categorías
+    - Asocia un evento con la categoría o categorías a las que pertenece.
+- Tabla de asociación entre usuarios y eventos
+    - Asocia a los usuarios con los eventos en los que están inscritos.
+- Tabla de asociación entre actividades y eventos
+    - Asocia cada actividad al evento al que pertenece.
 
 ## Uso
 Para generar los ejecutables y poner en marcha los contenedores de Docker se deben seguir los siguientes comandos.
@@ -48,3 +51,4 @@ Para evitar tener que ejecutar varios comandos para lanzar cada contenedor, teng
 `.\build.bat`
 
 ### Conclusión
+Ha sido todo un reto crear una aplicación web "completa" con una funcionalidad que cubre lo relacionado a la gestión de usuarios, eventos y actividades. Ha sido un reto aprender todo lo necesario sobre seguridad, modelado de datos y uso de la API de leaflet para el uso de mapas en el navegador. Finalmente, cabe mencionar que se utilizan estilos sencillos, con margen de mejora pero que cumplen las expectativas dado el limite de tiempo
