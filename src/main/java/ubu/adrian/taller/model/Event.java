@@ -269,7 +269,6 @@ public class Event {
     
     /**
      * Logica para añadir un participante
-     * 
      */
     public boolean increaseNumParticipant() {
     	if(numParticipants < maxCapacity) {
@@ -282,7 +281,6 @@ public class Event {
     
     /**
      * Logica para eliminar un participante
-     * 
      */
     public boolean decreaseNumParticipant() {
     	if(numParticipants > 0) {
@@ -362,7 +360,7 @@ public class Event {
 	/**
 	 * Devuelve la lista de los usuarios que participan en el evento
 	 * 
-	 * @return Lista de participantes del evento
+	 * @return List<User> Lista de participantes del evento
 	 */
 	public List<User> getParticipants() {
 	    return participants;
@@ -371,7 +369,7 @@ public class Event {
 	/**
 	 * Establece la lista de los usuarios que participan en el evento
 	 * 
-	 * @param participants
+	 * @param participants Lista de participantes
 	 */
 	public void setParticipants(List<User> participants) {
 	    this.participants = participants;

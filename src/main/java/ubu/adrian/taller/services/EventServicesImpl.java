@@ -78,6 +78,9 @@ public class EventServicesImpl implements EventServices {
 	
 	/**
 	 * Inscribe un usuario al evento
+	 * 
+	 * @param event Evento al que se añade el usuario
+	 * @param user Usuario que se añade al evento
 	 */
 	public void addParticipantToEvent(Event event, User user) {
 	    event.getParticipants().add(user);
@@ -87,6 +90,9 @@ public class EventServicesImpl implements EventServices {
 	
 	/**
 	 * Da de baja un usuario al evento
+	 * 
+	 * @param event Evento al que se desinscribe el usuario
+	 * @param user Usuario que se desinscribe del evento
 	 */
 	public void removeParticipantToEvent(Event event, User user) {
 	    event.getParticipants().remove(user);

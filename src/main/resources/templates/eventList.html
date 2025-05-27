@@ -46,6 +46,7 @@
 		<!-- Nav Menu -->
         <div th:replace="~{fragments/navMenu :: navMenu}"></div>
 		
+		<main>
 		<!-- Filtros -->
 		<form action="/event/search" method="get" class="filters-container">
 			<div class="filters-columns">
@@ -112,6 +113,7 @@
 		        </div>
 		    </div>
         </div>
+		</main>
 		
 		<!-- Footer -->
 	    <div th:replace="~{fragments/footer :: footer}"></div>

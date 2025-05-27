@@ -12,10 +12,32 @@ import ubu.adrian.taller.repository.ActivityRepository;
  */
 @Service
 public interface ActivityServices {
-	public static final ActivityRepository activityRepository = null;
-	
+	/**
+     * Devuelve una actividad dado su ID
+     * 
+     * @param id ID de la actividad
+     * @return Activity asociado al ID
+     */
 	public Activity findById(long id);
+	
+	/**
+	 * Devuelve una lista de todas las actividades
+	 * 
+	 * @return List<Activity> Lista de todos los eventos
+	 */
 	public List <Activity> findAll();
+	
+	/**
+	 * Guarda la actividad en la base de datos
+	 * 
+	 * @param activity Actividad que se quiere guardar
+	 */
 	public void saveActivity(Activity activity);
+	
+	/**
+	 * Guarda la actividad en la base de datos
+	 * 
+	 * @param activity Actividad que se quiere guardar
+	 */
 	public void deleteActivity(Activity activity);
 }

@@ -7,6 +7,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+	/**
+	 * Se añaden ubicaciones de los recursos estáticos
+	 * e imágenes de los eventos
+	 * 
+	 * @param registry registro de manejo de recursos
+	 */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         
@@ -15,6 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations(
                     "classpath:/app/static");
         
+        // Imágenes de los eventos
         registry.addResourceHandler("/img/event/**")
         	.addResourceLocations("file:/app/uploads/img/event/");
     }

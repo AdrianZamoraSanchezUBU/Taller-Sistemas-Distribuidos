@@ -9,10 +9,11 @@ import ubu.adrian.taller.model.Activity;
 import ubu.adrian.taller.repository.ActivityRepository;
 
 /**
- * Implementación de la interfaz UserServices
+ * Implementación de la interfaz ActivityServices
  */
 @Service
 public class ActivityServicesImpl implements ActivityServices{
+	// Repositorio de actividades
 	@Autowired
 	ActivityRepository activityRepository;
 	

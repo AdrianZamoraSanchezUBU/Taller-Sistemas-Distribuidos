@@ -25,16 +25,40 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      */
     public Event findById(long eventID);
     
+    /**
+     * Busca los eventos que pertenecen a un usuario
+     * 
+     * @param owner Usuario que ha creado eventos
+     * @return Eventos que pertenecen a ese owner
+     */
     List<Event> findByOwner(User owner);
 
-    List<Event> findByParticipantsContaining(User participants);
+    /**
+     * Busca los eventos en los que está inscrito un usuario
+     * 
+     * @param participant Usuario participante en algún evento
+     * @return Eventos en los que participa el usuario
+     */
+    List<Event> findByParticipantsContaining(User participant);
 
+    /**
+     * Devuelve los eventos que cumplen con las categorías buscadas y estan llenos
+     * 
+     * @param categories Categorías por las que se busca
+     * @return Lista<Event> Lista de eventos que cumplen las condiciones
+     */
     @Query("SELECT DISTINCT e FROM Event e " +
     	       "JOIN e.categories c " +
     	       "WHERE c.category IN :categories " +
     	       "AND e.numParticipants >= e.maxCapacity")
     	List<Event> findByCategoriesAndFull(@Param("categories") List<Categories> categories);
 
+    /**
+     * Devuelve los eventos que cumplen con las categorías buscadas y no estan llenos
+     * 
+     * @param categories Categorías por las que se busca
+     * @return Lista<Event> Lista de eventos que cumplen las condiciones
+     */
     @Query("SELECT DISTINCT e FROM Event e " +
     	       "JOIN e.categories c " +
     	       "WHERE c.category IN :categories " +
@@ -42,16 +66,30 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 	List<Event> findByCategoriesAndAvailable(@Param("categories") List<Categories> categories);
 
 
-
+    /**
+     * Devuelve los eventos que están llenos
+     * 
+     * @return Lista<Event> Lista de eventos que cumplen las condiciones
+     */
      @Query("SELECT e FROM Event e " +
             "WHERE e.numParticipants >= e.maxCapacity")
      List<Event> findFull();
   
 
+     /**
+      * Devuelve los eventos que no están llenos
+      * 
+      * @return Lista<Event> Lista de eventos que cumplen las condiciones
+      */
      @Query("SELECT e FROM Event e " +
             "WHERE e.numParticipants < e.maxCapacity")
      List<Event> findAvailable();
 
+     /**
+      * Devuelve los eventos de una determinada categoría
+      * 
+      * @return Lista<Event> Lista de eventos que cumplen las condiciones
+      */
      @Query("SELECT DISTINCT e FROM Event e " +
     	       "JOIN e.categories c " +
     	       "WHERE c.category IN :categories")

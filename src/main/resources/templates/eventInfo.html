@@ -25,110 +25,94 @@
 	<body>
 		<!-- Nav Menu -->
         <div th:replace="~{fragments/navMenu :: navMenu}"></div>
-			
-		<div class="container mt-5">
-			<!-- Información general -->
-			<div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+		
+		<main>
+		<div class="container mt-5 mb-5">
+			<!-- Información del evento -->
+	        <div class="row mb-5">
 				<!-- Imagen del evento a la izquierda -->
 			  	<div style="flex: 1;">
 			  		<img th:src="@{'/img/event/' + ${event.imagen}}" 
 			        	 alt="Imagen del evento" 
 			         	style="width: 100%; max-width: 500px; height: auto; border-radius: 1rem;">
 			  	</div>
-			
-		  	<!-- Información a la derecha -->
-			<div style="flex: 1;">
-				<h1 th:text="${event.title}">Título del evento</h1>
-				<p><strong>Fecha:</strong><span th:text="${event.startDate}"></span> a <span th:text="${event.endDate}"></span></p>
-			    <p><strong>Descripción:</strong></p>
-			    <p th:text="${event.description}">Descripción aquí</p>
-				<p><strong>Aforo</strong>
-					<span th:text="${event.numParticipants}"></span>
-					/
-					<span th:text="${event.maxCapacity}"></span></p>
-
-				<!-- Ubicación en texto -->
-				<p><strong>Lugar:</strong> <span th:text="${event.ubication}" id="ubication-text">Burgos, Castilla y León, España</span></p>
-
-				<!-- Ubicación con pin en el mapa -->
-				<div id="map"></div>
-					<div class="my-3">
-						<p><strong>Categorías:</strong> 
-				    	<span class="badge bg-primary" th:each="cat : ${event.categories}" th:text="${cat.category.name}">Sin categoría</span>
-					</div>
-				</div>
-			</div>
-
-			 <!-- Para Participantes -->
-			<div th:if="${!#lists.isEmpty(event.activities)}">
-				<h2>Actividades</h2>
-			  	<ul class="list-group">
-		            <li class="list-group-item" th:each="activity : ${event.activities}">
-						<span th:text="${activity.startTime}">Hora inicio</span>-<span th:text="${activity.endTime}">Hora fin</span>
-						<strong th:text="${activity.name}">Nombre</strong> 
-						Descripción: <span th:text="${activity.description}">Descripción</span>
-		            </li>
-		      	</ul>
-			</div>
-		   
-		    <div sec:authorize="hasRole('PARTICIPANTE')">
-		        <div th:if="${!event.participants.contains(user)}">
-		            <form th:action="@{/event/join/{id}(id=${event.id})}" method="post">
-		                <button type="submit" class="btn btn-success">Inscribirse</button>
-		            </form>
-		        </div>
-		        <div th:if="${event.participants.contains(user)}">
-					<form th:action="@{/event/leave/{id}(id=${event.id})}" method="post">
-		                <button type="submit" class="btn btn-success">Desinscibirse</button>
-		            </form>
-		        </div>
-		    </div>
-		
-		    <!-- Para Organizadores -->
-		    <div sec:authorize="hasRole('ORGANIZADOR')" th:if="${owner}">
-		
-		        <h3 class="mt-4">Gestión del Evento</h3>
-		
-		        <a th:href="@{/event/edit/{id}(id=${event.id})}" class="btn btn-warning mb-3">Editar evento</a>
-		
-		        <h4>Participantes inscritos:</h4>
-				<ul class="list-group mb-4">
-					<!-- En caso de lista vacía -->
-				    <li class="list-group-item" th:if="${#lists.isEmpty(event.participants)}">
-				        No hay participantes actualmente
-				    </li>
-				    
-					<!-- Lista de usuarios con boton para eliminar -->
-				    <li class="list-group-item d-flex justify-content-between align-items-center"
-				        th:each="participant : ${event.participants}">
-				        
-				        <span th:text="${participant.username}">Nombre de usuario</span>
-				        
-				        <form th:action="@{'/event/' + ${event.id} + '/remove-user/' + ${participant.id}}" method="post"
-				              th:object="${event}">
-				            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
-				        </form>
-				    </li>
-				</ul>
-		
-				<!-- Lista las actividades del evento -->
-		        <h4>Actividades</h4>
-		        <ul class="list-group">
-					<!-- En caso de lista vacía -->
-				    <li class="list-group-item" th:if="${#lists.isEmpty(event.activities)}">
-				        No hay actividades actualmente
-				    </li>
-									    
+	            <div class="col-md-6">
+	                <h1 th:text="${event.title}" class="text-primary">Título del evento</h1>
+	                <p><strong>Fecha:</strong> <span th:text="${event.startDate}"></span> a <span th:text="${event.endDate}"></span></p>
+	                <p><strong>Descripción:</strong></p>
+	                <p th:text="${event.description}"></p>
+	                <p><strong>Aforo:</strong> <span th:text="${event.numParticipants}"></span> / <span th:text="${event.maxCapacity}"></span></p>
+	                
+					<!-- Ubicación en texto -->
+					<p><strong>Lugar:</strong> <span th:text="${event.ubication}" id="ubication-text"></span></p>
 					
-		            <li class="list-group-item" th:each="activity : ${event.activities}">
-						<span th:text="${activity.startTime}">Hora inicio</span>-<span th:text="${activity.endTime}">Hora fin</span>
-						<strong th:text="${activity.name}">Nombre</strong> - 
-		                <span th:text="${activity.description}">Descripción</span>
-		            </li>
-		        </ul>
-		        <a th:href="@{/activity/manage/{id}(id=${event.id})}" class="btn btn-secondary mt-3">Gestionar actividades</a>
-		    </div>
+					<!-- Ubicación con pin en el mapa -->
+					<div id="map"></div>
+						<div class="my-3">
+							<p><strong>Categorías:</strong> 
+					    	<span class="badge bg-primary me-2" th:each="cat : ${event.categories}" th:text="${cat.category.name}">Sin categoría</span>
+						</div>
+					</div>
+	            </div>
+	        </div>
+
+			<div class="container">
+				<!-- Actividades -->
+				<div th:if="${!#lists.isEmpty(event.activities)}" class="mb-4">
+				    <h2 class="text-secondary">Actividades</h2>
+				    <ul class="list-group">
+				        <li class="list-group-item d-flex justify-content-between align-items-start flex-column flex-md-row"
+				            th:each="activity : ${event.activities}">
+				            
+				            <div>
+				                <strong th:text="${activity.name}"></strong>:
+				                <span th:text="${activity.startTime}"></span> - 
+				                <span th:text="${activity.endTime}"></span><br>
+				                <small th:text="${activity.description}"></small>
+				            </div>
+				        </li>
+				    </ul>
+				</div>
+				
+				<!-- Botón solo para organizador propietario -->
+				<div sec:authorize="hasRole('ORGANIZADOR')" th:if="${owner}" class="mt-1 mb-4 d-flex gap-2">
+				    <a th:href="@{/activity/manage/{id}(id=${event.id})}" class="btn btn-outline-secondary">Gestionar actividades</a>
+				</div>
+	
+		        <!-- Botones de inscripción -->
+		        <div sec:authorize="hasRole('PARTICIPANTE')" class="d-flex justify-content-center gap-3 mb-4 mt-3">
+		            <form th:if="${!event.participants.contains(user)}" th:action="@{/event/join/{id}(id=${event.id})}" method="post">
+		                <button type="submit" class="btn btn-outline-success px-4">Inscribirse</button>
+		            </form>
+		            <form th:if="${event.participants.contains(user)}" th:action="@{/event/leave/{id}(id=${event.id})}" method="post">
+		                <button type="submit" class="btn btn-outline-danger px-4">Desinscribirse</button>
+		            </form>
+		        </div>
+	
+		        <!-- Sección para el organizador -->
+		        <div sec:authorize="hasRole('ORGANIZADOR')" th:if="${owner}" class="mb-5">
+		            <h4>Participantes inscritos</h4>
+		            <ul class="list-group mb-3">
+		                <li class="list-group-item" th:if="${#lists.isEmpty(event.participants)}">
+		                    No hay participantes actualmente.
+		                </li>
+		                <li class="list-group-item d-flex justify-content-between align-items-center"
+		                    th:each="participant : ${event.participants}">
+		                    <span th:text="${participant.username}"></span>
+		                    <form th:action="@{'/event/' + ${event.id} + '/remove-user/' + ${participant.id}}" method="post">
+		                        <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+		                    </form>
+		                </li>
+		            </ul>	          
+	
+		            <h4 class="mt-4">Gestión del Evento</h4>
+		            <a th:href="@{/event/edit/{id}(id=${event.id})}" class="btn btn-outline-warning mb-3">Editar evento</a>
+		        </div>
+			</div>
 		</div>
+		</main>
+		<!-- Footer -->
+	    <div th:replace="~{fragments/footer :: footer}"></div>
 		
 		<script>
 			// Cuando carga el DOM carga la ubicación en el mapa

@@ -50,7 +50,8 @@ public class EventController {
      * Visualiza los eventos a los que está inscrito un usuario
      * o los que pertenecen a un organizador según sea el rol de usuario
      * 
-     * 
+     * @param model Modelo de la vista
+     * @param authentication autenticación de usuarios
      */
     @GetMapping("/event/my-events")
     public String myEvents(Model model, Authentication authentication) {
@@ -76,7 +77,9 @@ public class EventController {
      * @return Al home o a la lista de eventos
      */
     @PostMapping("/event/delete/{id}")
-    public String deleteEvent(@PathVariable Long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+    public String deleteEvent(@PathVariable Long id, 
+    		Authentication authentication, 
+    		RedirectAttributes redirectAttributes) {
         Event event = eventServices.findById(id);
         User user = userServices.findByUsername(authentication.getName());
 
@@ -165,7 +168,7 @@ public class EventController {
      * 
      * @return Página de eventos
      */
-    @PostMapping("/event/{id}/leave/")
+    @PostMapping("/event/leave/{id}")
     public String leaveEvent(@PathVariable long id, Authentication authentication, RedirectAttributes redirectAttributes) {
         // Se comprueba que el usuario está autenticado
     	if (authentication == null || !authentication.isAuthenticated()) {

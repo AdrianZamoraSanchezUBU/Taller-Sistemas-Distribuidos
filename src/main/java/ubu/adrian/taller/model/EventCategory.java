@@ -19,14 +19,17 @@ import jakarta.persistence.Table;
 @Table(name = "events_categories")
 public class EventCategory {
 
+	// Id de la asociación evento-categoría
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    // Categoría asociada al evento
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false, length = 50)
     private Categories category;
 
+    // Evento que se asocia con la categoría
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
@@ -34,8 +37,8 @@ public class EventCategory {
     /**
      * Constructor con categoría y evento
      * 
-     * @param category categoria de la relacion
-     * @param event    evento cuya categoria se guarda
+     * @param category Categoria de la relacion
+     * @param event    Evento cuya categoria se guarda
      */
     public EventCategory(Categories category, Event event) {
         this.category = category;
@@ -49,6 +52,8 @@ public class EventCategory {
     
     /**
      * Establece la categoria
+     * 
+     * @param category Categoría que se asigna a la relación
      */
     public void setCategory(Categories category) {
     	this.category = category;
@@ -65,6 +70,8 @@ public class EventCategory {
     
     /**
      * Establece el evento asociado 
+     * 
+     * @param event Evento que forma parte de la relación
      */
     public void setEvent(Event event) {
     	this.event = event;

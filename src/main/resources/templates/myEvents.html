@@ -12,7 +12,7 @@
 		
 		<!-- Nav Menu -->
         <div th:replace="~{fragments/navMenu :: navMenu}"></div>
-		
+		<main>
 		<!-- Lista de eventos -->
         <div class="m-3">
             <p th:if="${#lists.isEmpty(eventList)}">No hay eventos disponibles actualmente.</p>
@@ -41,5 +41,9 @@
 		        </div>
 		    </div>
         </div>
+		</main>
+		
+		<!-- Footer -->
+	    <div th:replace="~{fragments/footer :: footer}"></div>
 	</body>
 </html>

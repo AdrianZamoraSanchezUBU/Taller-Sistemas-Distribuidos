@@ -11,5 +11,12 @@ import ubu.adrian.taller.model.Event;
  */
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
+	
+	/**
+	 * Devuelve una actividad dado su ID
+	 * 
+	 * @param activityID ID por el que se busca
+	 * @return Actividad asociada al ID
+	 */
 	public Activity findById(long activityID);
 }

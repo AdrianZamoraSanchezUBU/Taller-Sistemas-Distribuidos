@@ -3,6 +3,7 @@ package ubu.adrian.taller.config;
 import ubu.adrian.taller.model.User;
 import ubu.adrian.taller.model.UserRol;
 import ubu.adrian.taller.repository.UserRepository;
+import ubu.adrian.taller.services.UserServicesImpl;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -31,12 +32,15 @@ import java.util.UUID;
 @Component
 public class Initializer implements CommandLineRunner {
 
+	// Servicio de usuarios para generar el admin
     @Autowired
-    private UserRepository userRepository;
-
+    private UserServicesImpl userServices;
+    
+    // Codificador de contraseñas para generar el admin
     @Autowired
     private PasswordEncoder passwordEncoder;
     
+    // Ruta donde se suben las imagenes, en este caso para la por defecto
     @Value("${app.upload.dir:/app/uploads}")
     private String uploadDir;
 
@@ -49,7 +53,7 @@ public class Initializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // Obtiene al admin
-    	User admin = userRepository.findByUsername("admin");
+    	User admin = userServices.findByUsername("admin");
     	
     	// Comprueba si hay admin
     	if (admin == null) {
@@ -61,7 +65,7 @@ public class Initializer implements CommandLineRunner {
             admin.setPassword(passwordEncoder.encode("admin"));
             admin.setRol(UserRol.ADMIN);
             
-            userRepository.save(admin);
+            userServices.saveUser(admin);
             System.out.println("Usuario \"admin\" operativo");
         }
     	
