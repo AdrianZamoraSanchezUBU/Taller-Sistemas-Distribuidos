@@ -15,19 +15,19 @@
                     </li>
 
                     <!-- Se muestran botones de "Mis eventos" distintos para participantes y para organizadores -->
-                    <li class="nav-item" sec:authorize="hasRole('ORGANIZADOR') or hasRole('ADMIN')">
+                    <li class="nav-item" sec:authorize="hasRole('ORGANIZADOR')">
                         <a class="nav-link text-white border-end border-white py-3 px-4" 
                            th:href="@{/event/my-events}" 
                            style="transition: background-color 0.3s ease;">Mis eventos</a>
                     </li>
-                    <li class="nav-item" sec:authorize="hasRole('PARTICIPANTE') or hasRole('ADMIN')">
+                    <li class="nav-item" sec:authorize="hasRole('PARTICIPANTE')">
                         <a class="nav-link text-white border-end border-white py-3 px-4" 
                            th:href="@{/event/my-events}" 
                            style="transition: background-color 0.3s ease;">Mis eventos</a>
                     </li>
 					
 					<!-- Para crear nuevos eventos, solo para organizadores -->
-					<li class="nav-item" sec:authorize="hasRole('ORGANIZADOR') or hasRole('ADMIN')">
+					<li class="nav-item" sec:authorize="hasRole('ORGANIZADOR')">
                        <a class="nav-link text-white border-end border-white py-3 px-4" 
                           th:href="@{/event/create}" 
                           style="transition: background-color 0.3s ease;">Nuevo evento</a>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ubu.adrian.taller.services.EventServicesImpl;
@@ -355,10 +356,10 @@ public class EventController {
     /**
      * Edita los datos de un evento existente
      * 
-     * @param id
-     * @param model
-     * @param authentication
-     * @return
+     * @param id ID del evento que se edita
+     * @param model Modelo de la vista
+     * @param authentication Autenticador de usuarios
+     * @return Formulario de actualización del evento
      */
     @GetMapping("/event/edit/{id}")
     public String updateEvent(@PathVariable long id, Model model, Authentication authentication) {
@@ -397,7 +398,7 @@ public class EventController {
      * @param id ID del evento que se quiere actualizar
      * @param updatedEvent Objeto que contiene los datos actualizados
      * @param authentication Sistema de autentificación de spring boot 
-     * @return Página de información del evento actualizado
+     * @return Página de información del evento, con informacion actualizada
      * @throws IOException En caso de problemas durante la gestión de la imagen
      */
 	@PostMapping("/update-event/{id}")
@@ -419,7 +420,9 @@ public class EventController {
         }
 	    
 	    // Manejar la imagen
-        if (updatedEvent.getImagen() == null) {
+        MultipartFile nuevaImagen = updatedEvent.getImagen();
+        
+        if (nuevaImagen == null || nuevaImagen.isEmpty()) {
             existing.setImagen(existing.getImagen()); // Se mantiene la que había
         } else {
         	String nombreArchivo;
@@ -445,6 +448,7 @@ public class EventController {
                 }
             }
              
+            // Sube la imagen al servidor
             Path filePath = uploadPath.resolve(nombreArchivo);
             Files.copy(updatedEvent.getImagen().getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         

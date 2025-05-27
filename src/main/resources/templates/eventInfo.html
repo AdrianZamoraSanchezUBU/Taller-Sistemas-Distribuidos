@@ -107,7 +107,10 @@
 	
 		            <h4 class="mt-4">Gestión del Evento</h4>
 		            <a th:href="@{/event/edit/{id}(id=${event.id})}" class="btn btn-outline-warning mb-3">Editar evento</a>
-		        </div>
+					<form th:action="@{/event/delete/{id}(id=${event.id})}" method="post">
+						<button type="submit" class="btn btn-outline-danger mb-3">Eliminar evento</button>
+		        	<form>
+				</div>
 			</div>
 		</div>
 		</main>
