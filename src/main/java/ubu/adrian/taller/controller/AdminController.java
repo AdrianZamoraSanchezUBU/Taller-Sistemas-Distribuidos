@@ -15,9 +15,11 @@ import org.springframework.ui.Model;
 
 import ubu.adrian.taller.dto.UserRegisterDTO;
 import ubu.adrian.taller.dto.UserMapper;
+import ubu.adrian.taller.model.Event;
 import ubu.adrian.taller.model.User;
 import ubu.adrian.taller.model.UserRol;
 import ubu.adrian.taller.repository.UserRepository;
+import ubu.adrian.taller.services.EventServicesImpl;
 import ubu.adrian.taller.services.UserServices;
 import ubu.adrian.taller.services.UserServicesImpl;
 
@@ -31,6 +33,10 @@ public class AdminController {
 	// Servicio de usuarios
 	@Autowired
 	private UserServicesImpl userServices;
+	
+	// Servicio de eventos
+	@Autowired
+	private EventServicesImpl eventServices;
 	
 	// Servicio de encriptación de contraseñas
 	@Autowired
@@ -67,7 +73,31 @@ public class AdminController {
      * @return la lista de usuarios actualizada
      */
     @PostMapping("/remove")
-    public String removeUser(@RequestParam("id") Long id) {
+    public String removeUser(@RequestParam("id") long id) {
+    	User user = userServices.findById(id);
+    	
+    	List<Event> events = null;
+    	
+    	// Comprueba si el usuario es un organizador
+    	if (user.getRol() == UserRol.ORGANIZADOR) {
+            List<Event> eventsOwned = eventServices.findByOwner(user);
+            
+            // Elimina sus eventos
+            for (Event event : eventsOwned) {
+                eventServices.deleteById(event.getId());
+            }
+        }
+    	
+    	 // Si es participante, elimínalo de los eventos donde participa
+        List<Event> eventsAsParticipant = eventServices.findEventsByParticipant(user);
+        for (Event event : eventsAsParticipant) {
+        	// Lo elimina
+            event.removeParticipant(user);
+            
+            // Guarda el cambio
+            eventServices.saveEvent(event);     
+        }
+        
     	// Elimina por id
         userServices.deleteById(id);
         return "redirect:/user-list";

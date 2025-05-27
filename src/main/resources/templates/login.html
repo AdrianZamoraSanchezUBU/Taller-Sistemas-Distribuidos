@@ -25,8 +25,8 @@
 				</div>
 				
 			    <form action="#" th:action="@{/login}" method="POST" class="d-flex flex-column p-3 justify-content-center border shadow-lg">
-			        <input type="text" name="username" placeholder="Nombre" required="true" class="mb-3 p-2" />
-			        <input type="password" name="password" placeholder="Contraseña" required="true" class="mb-3 p-2" />
+			        <input required type="text" name="username" placeholder="Nombre" class="mb-3 p-2" />
+			        <input required type="password" name="password" placeholder="Contraseña" class="mb-3 p-2" />
 			        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 					<div th:replace="~{fragments/mainButton :: boton('Iniciar sesión', 'btn-primary', '')}"></div>
 			    </form>

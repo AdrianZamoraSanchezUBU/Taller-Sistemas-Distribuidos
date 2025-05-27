@@ -16,23 +16,23 @@
 			<form th:action="@{'/update-activity/' + ${id}}" th:object="${activityDTO}" method="post" enctype="multipart/form-data">
 			    <div class="mb-3">
 			        <label for="name" class="form-label">Título de la actividad</label>
-			        <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Título de la actividad">
+			        <input required type="text" class="form-control" id="name" th:field="*{name}" placeholder="Título de la actividad">
 			    </div>
 			    <div class="mb-3">
 			        <label for="description" class="form-label">Descripción de la actividad</label>
-			        <input type="text" class="form-control" id="description" th:field="*{description}" placeholder="Descripción de la actividad">
+			        <input required type="text" class="form-control" id="description" th:field="*{description}" placeholder="Descripción de la actividad">
 			    </div>
 			    <div class="mb-3">
 			        <label for="startTime" class="form-label">Hora de inicio</label>
-					<input type="time" id="startTime" th:field="*{startTime}" class="form-control">
+					<input required type="time" id="startTime" th:field="*{startTime}" class="form-control">
 			    </div>
 			    <div class="mb-3">
 					<label for="endtime" class="form-label">Hora de fin</label>
-					<input type="time" id="endTime" th:field="*{endTime}" class="form-control">
+					<input required type="time" id="endTime" th:field="*{endTime}" class="form-control">
 			    </div>
 			    
 			    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-			    <button type="submit" class="btn btn-primary">Guardar actividad</button>
+			    <button required type="submit" class="btn btn-primary">Guardar actividad</button>
 			</form>
 	    </div>
 	</body>

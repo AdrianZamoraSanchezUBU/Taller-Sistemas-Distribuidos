@@ -45,6 +45,7 @@ public class ActivitiesController {
 	 * 
 	 * @param eventServices servicio de eventos
 	 * @param activityServices servicio de actividades
+	 * @param userServices servicio de usuarios
 	 */
     public ActivitiesController(EventServicesImpl eventServices, ActivityServicesImpl activityServices, UserServicesImpl userServices) {
         this.eventServices = eventServices;
@@ -55,9 +56,9 @@ public class ActivitiesController {
 	/**
 	 * Gestiona la creacion de una actividad para un evento
 	 * 
-	 * @param eventId
-	 * @param model
-	 * @return
+	 * @param eventId ID del evento
+	 * @param model Modelo de la vista
+	 * @return lista de actividades
 	 */
 	@GetMapping("/activity/manage/{eventId}")
 	public String activityList(@PathVariable long eventId, Model model) {
@@ -77,11 +78,11 @@ public class ActivitiesController {
 	}
 	
 	/**
-	 * Gestiona la eliminación de una actividad
+	 * Elimina una actividad
 	 * 
-	 * @param eventId
-	 * @param model
-	 * @return
+	 * @param eventId ID del evento 
+	 * @param activityId ID de la actividad
+	 * @return lista de actividades
 	 */
 	@GetMapping("/activity/delete/{id}")
 	public String deleteActivity(@PathVariable("id") long activityId, @RequestParam("eventId") long eventId) {
@@ -98,9 +99,9 @@ public class ActivitiesController {
 	/**
 	 * Gestiona la creacion de una actividad para un evento
 	 * 
-	 * @param eventId
-	 * @param model
-	 * @return
+	 * @param eventId ID del evento
+	 * @param model Modelos de la vista
+	 * @return formato de creacion de actividades
 	 */
 	@GetMapping("/activity/create/{eventId}")
 	public String createActivityForm(@PathVariable long eventId, Model model) {
@@ -120,9 +121,9 @@ public class ActivitiesController {
 	/**
 	 * Gestiona la creacion de una actividad para un evento
 	 * 
-	 * @param eventId
-	 * @param model
-	 * @return
+	 * @param eventId ID del evento
+	 * @param model Modelos de la vista
+	 * @return página de información del evento
 	 */
 	@PostMapping("/activity/save-activity")
 	public String saveActivity(@ModelAttribute Activity activity, 
@@ -148,10 +149,10 @@ public class ActivitiesController {
 	/**
      * Edita los datos de un evento existente
      * 
-     * @param id
-     * @param model
-     * @param authentication
-     * @return
+     * @param eventId ID del evento
+	 * @param model Modelos de la vista
+     * @param authentication token de autenticación del usuario
+     * @return 
      */
     @GetMapping("/activity/edit/{id}")
     public String editActivity(@PathVariable long id, Model model, Authentication authentication) {
@@ -184,7 +185,7 @@ public class ActivitiesController {
      * 
      * @param id ID del evento que se quiere actualizar
      * @param updatedActivity Objeto que contiene los datos actualizados
-     * @param authentication Sistema de autentificación de spring boot 
+     * @param authentication token de autenticación del usuario
      * @return Página de información del evento actualizado
      */
 	@PostMapping("/update-activity/{id}")

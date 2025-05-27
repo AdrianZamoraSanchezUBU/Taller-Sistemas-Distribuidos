@@ -28,11 +28,11 @@
 			<form action="/new-event" method="post" enctype="multipart/form-data">
 			    <div class="mb-3">
 			        <label for="title" class="form-label">Título del evento</label>
-			        <input type="text" class="form-control" id="title" name="title" placeholder="Título del evento">
+			        <input required type="text" class="form-control" id="title" name="title" placeholder="Título del evento">
 			    </div>
 			    <div class="mb-3">
 			        <label for="description" class="form-label">Descripción del evento</label>
-			        <input type="text" class="form-control" id="description" name="description" placeholder="Descripción del evento">
+			        <input required type="text" class="form-control" id="description" name="description" placeholder="Descripción del evento">
 			    </div>
 			    <div class="mb-3">
 			        <label for="imagen" class="form-label">Imagen del evento</label>
@@ -40,15 +40,15 @@
 			    </div>
 			    <div class="mb-3">
 			        <label for="startDate" class="form-label">Fecha de inicio</label>
-			        <input type="date" class="form-control" id="startDate" name="startDate">
+			        <input required type="date" class="form-control" id="startDate" name="startDate">
 			    </div>
 			    <div class="mb-3">
 			        <label for="endDate" class="form-label">Fecha de fin</label>
-			        <input type="date" class="form-control" id="endDate" name="endDate">
+			        <input required type="date" class="form-control" id="endDate" name="endDate">
 			    </div>
 				<div class="mb-3">
 			        <label for="maxCapacity" class="form-label">Aforo máximo</label>
-			        <input type="number" class="form-control" id="maxCapacity" name="maxCapacity">
+			        <input required type="number" class="form-control" id="maxCapacity" name="maxCapacity">
 			    </div>
 				
 				<!-- Selector multiple para las categorías -->
@@ -67,7 +67,7 @@
 				<!-- Buscador de ubicación -->
 			    <div class="mb-3">
 			        <label for="ubication" class="form-label">Lugar del evento</label>
-			        <input type="text" class="form-control mb-2" id="ubication" name="ubication" readonly placeholder="Busca en el mapa el lugar">
+			        <input required type="text" class="form-control mb-2" id="ubication" name="ubication" readonly placeholder="Busca en el mapa el lugar">
 			        <div id="map"></div>
 			    </div>
 			    

@@ -79,7 +79,7 @@ public class UserController {
 	 * 
 	 * @param userDTO Objeto de transferencia de datos de usuario
 	 * @param result Resultado que se espera devolver
-	 * @param authentication Gestor de autentificaciones
+	 * @param authentication Token de autenticación del usuario
 	 * @return página de registro o user-list
      */
     @PostMapping("/create-user")

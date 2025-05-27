@@ -19,11 +19,11 @@
 				    
 					<form class="p-4 border rounded shadow" action="#" th:action="@{/update-user}" th:object="${user}" method="POST">					                    
 			            <div class="mb-3">
-			                <input type="text" class="form-control" th:field="*{username}" placeholder="Nombre" required>
+			                <input required type="text" class="form-control" th:field="*{username}" placeholder="Nombre">
 			            </div>
 			
 			            <div class="mb-3">
-			                <input type="password" class="form-control" th:field="*{password}" placeholder="Contraseña" required>
+			                <input required type="password" class="form-control" th:field="*{password}" placeholder="Contraseña">
 			            </div>
 			
 			            <!-- Selector de rol solo visible para administradores -->
@@ -36,10 +36,6 @@
 							    </option>
 							</select>
 			            </div>
-			
-			            <!-- Rol USER por defecto para los no administradores -->
-			            <input sec:authorize="!hasRole('ADMIN')"
-			                   type="hidden" th:field="*{rol}" value="USER"/>
 			
 			            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 						<input type="hidden" th:field="*{id}" />

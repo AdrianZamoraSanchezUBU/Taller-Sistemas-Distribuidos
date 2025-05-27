@@ -38,12 +38,12 @@
 	                        <td th:text="${user.rol}"></td>
 	                        <td>
 	                            <form th:action="@{/remove}" method="POST" class="d-inline">
-	                                <input type="hidden" name="id" th:value="${user.id}" />
+	                                <input required type="hidden" name="id" th:value="${user.id}" />
 	                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
 	                            </form>
 	
 	                            <form th:action="@{/update-user-data}" method="GET" class="d-inline">
-	                                <input type="hidden" name="id" th:value="${user.id}" />
+	                                <input required type="hidden" name="id" th:value="${user.id}" />
 	                                <button type="submit" class="btn btn-warning btn-sm">Actualizar</button>
 	                            </form>
 	                        </td>

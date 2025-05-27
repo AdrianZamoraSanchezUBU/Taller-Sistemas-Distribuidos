@@ -28,7 +28,7 @@ public class HomeController {
 	 * Gestiona las solicitudes de la ruta /
 	 * 
 	 * @param model Modelo donde se insertan los datos
-	 * @param authentication Gestor de autentificaciones
+	 * @param authentication Token de autenticación del usuario
 	 * @return página home
 	 */
 	@GetMapping("/")

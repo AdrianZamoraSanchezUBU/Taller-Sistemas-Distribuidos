@@ -61,6 +61,7 @@ public class EventServicesImpl implements EventServices {
 	        return eventRepository.findAll();
 	    }
 
+		// Comprueba las diferentes combinaciones de filtros
 	    if (categories != null && "FULL".equals(capacity)) {
 	        return eventRepository.findByCategoriesAndFull(categories);
 	    } else if (categories != null && "AVAILABLE".equals(capacity)) {

@@ -52,7 +52,8 @@ public class EventController {
      * o los que pertenecen a un organizador según sea el rol de usuario
      * 
      * @param model Modelo de la vista
-     * @param authentication autenticación de usuarios
+     * @param authentication token de autenticación del usuario
+     * @return lista de eventos del usuario
      */
     @GetMapping("/event/my-events")
     public String myEvents(Model model, Authentication authentication) {
@@ -75,6 +76,7 @@ public class EventController {
     /**
      * Elimina un evento
      * 
+     * @param id ID del evento
      * @return Al home o a la lista de eventos
      */
     @PostMapping("/event/delete/{id}")
@@ -110,6 +112,8 @@ public class EventController {
     /**
      * Añade un participante al evento
      * 
+     * @param id ID del evento
+     * @param authentication
      * @return Página de login en caso de necesitar login o información del evento
      */
     @PostMapping("/event/join/{id}")
@@ -129,7 +133,7 @@ public class EventController {
 
         // Comprueba si el usuario puede apuntarse al evento (no debe pertenecer previamente)
         if (event.getParticipants().contains(user)) {
-            redirectAttributes.addFlashAttribute("message", "Ya estás inscrito en este evento.");
+        	return "redirect:/login?error=No+puedes+inscribirte+a+un+evento+alque+ya+perteneces";
         } else {
             eventServices.addParticipantToEvent(event, user);
         }
@@ -140,13 +144,15 @@ public class EventController {
     /**
      * Desinscribe un participante del evento
      * 
+     * @param eventId ID del evento
+     * @param userId ID del usuario
+     * @param authentication Token de autenticación del usuario
      * @return Página de eventos
      */
     @PostMapping("/event/{eventId}/remove-user/{userId}")
     public String removeParticipant(@PathVariable long eventId,
                                     @PathVariable long userId,
-                                    Authentication authentication,
-                                    RedirectAttributes redirectAttributes) {
+                                    Authentication authentication) {
 
         User currentUser = userServices.findByUsername(authentication.getName());
         Event event = eventServices.findById(eventId);
@@ -167,10 +173,13 @@ public class EventController {
      * Desinscribe un participante del evento 
      * para uso de organizadores
      * 
+     * @param id ID del evento
+     * @param authentication Token de autenticación del usuario
      * @return Página de eventos
      */
     @PostMapping("/event/leave/{id}")
-    public String leaveEvent(@PathVariable long id, Authentication authentication, RedirectAttributes redirectAttributes) {
+    public String leaveEvent(@PathVariable long id, 
+    		Authentication authentication) {
         // Se comprueba que el usuario está autenticado
     	if (authentication == null || !authentication.isAuthenticated()) {
             return "redirect:/login?error=Debes+iniciar+sesión+para+dejar+un+evento";
@@ -183,7 +192,7 @@ public class EventController {
 
         // Comprueba si el usuario puede salir del evento (debe pertenecer previamente)
         if (!event.getParticipants().contains(user)) {
-            redirectAttributes.addFlashAttribute("message", "No estás inscrito en este evento.");
+        	return "redirect:/login?error=Debes+pertenecer+al+evento+antes+de+salir";
         } else {
             eventServices.removeParticipantToEvent(event, user);
         }
@@ -195,11 +204,16 @@ public class EventController {
      * Gestiona la página de visionado de un evento en la ruta
      * /event/info/id_evento
      * 
+     * @param id ID del evento
+     * @param model Modelo de la vista
+     * @param authentication Token de autenticación del usuario
      * @return página de información del evento
      */
     @GetMapping("/event/info/{id}")
-    public String eventInfo(@PathVariable long id, Model model, Authentication authentication){
-    	
+    public String eventInfo(@PathVariable long id, 
+    		Model model, 
+    		Authentication authentication){
+    	// Evento y dueño
         Event event = eventServices.findById(id);
         boolean owner = false;
         
@@ -225,6 +239,9 @@ public class EventController {
     /**
 	 * Gestiona las solicitudes de la ruta /event/search
 	 * 
+	 * @param categories Lista de categorias a biscar
+	 * @param capacity Si esta lleno o no el evento
+	 * @param model Modelo de la vista
 	 * @return página de creación de eventos
 	 */
     @GetMapping("/event/search")
@@ -256,6 +273,7 @@ public class EventController {
     /**
 	 * Gestiona las solicitudes de la ruta /event/filter
 	 * 
+	 * @param model Modelo de la vista
 	 * @return página de creación de eventos
 	 */
     @GetMapping("/event/filter")
@@ -273,6 +291,7 @@ public class EventController {
 	/**
 	 * Gestiona las solicitudes de la ruta /event/create
 	 * 
+	 * @param model Modelo de la vista
 	 * @return página de creación de eventos
 	 */
     @GetMapping("/event/create")
@@ -288,11 +307,11 @@ public class EventController {
     /**
      * Gestiona la creación de un nuevo evento
      * 
+     * @param newEventDTO DTO del evento que se crea
      * @return Redirección a la lista de eventos
      */
     @PostMapping("/new-event")
-    public String newEvent(@ModelAttribute NewEventDTO newEventDTO,
-                          RedirectAttributes redirectAttributes) throws IOException {
+    public String newEvent(@ModelAttribute NewEventDTO newEventDTO) throws IOException {
         
     	// Obtener usuario autenticado
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -416,7 +435,7 @@ public class EventController {
 
         // Comprueba si es el dueño para mostrar datos de organizador del evento
         if (!existing.getOwner().equals(user) && user.getRol() != UserRol.ORGANIZADOR) {
-            return "redirect:/login";
+            return "redirect:/login?error=Debes+ser+dueño+del+evento";
         }
 	    
 	    // Manejar la imagen
